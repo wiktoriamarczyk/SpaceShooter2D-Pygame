@@ -1,17 +1,13 @@
 import math
-from Enemy import *
+from DynamicObject import *
 
-class BombEnemy (Enemy):
-    def __init__(self, position):
-        super().__init__(position)
+class BombEnemy (DynamicObject):
+    def __init__(self, position, sprite_path):
+        super().__init__(position, sprite_path)
 
-        image_path = DATA_PATH + 'sprites/bomb-ship.png'
-        self.image = pg.image.load(image_path) if image_path else None
         self.size = pg.Vector2(SHIP_SIZE, SHIP_SIZE)
-        self.position = position
         self.speed = 200
-        self.timer = 0
-
+        
         # rotate the image
         self.image = pg.transform.scale(self.image, self.size)
         self.image = pg.transform.rotate(self.image, 180)

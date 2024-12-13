@@ -1,10 +1,9 @@
 from GameObject import *
 
 class Ship (GameObject):
-    def __init__(self):
-        super().__init__()
-        image_path = DATA_PATH + 'sprites/ship.png'
-        self.image = pg.image.load(image_path) if image_path else None
+    def __init__(self, sprite_path):
+        super().__init__(sprite_path)
+
         self.size = pg.Vector2(SHIP_SIZE, SHIP_SIZE)
         self.position = pg.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         self.speed = 300

@@ -1,14 +1,12 @@
-from Enemy import *
+from DynamicObject import *
 
-class BasicEnemy (Enemy):
-    def __init__(self, position):
-        super().__init__(position)
-        image_path = DATA_PATH + 'sprites/bullet-ship.png'
-        self.image = pg.image.load(image_path) if image_path else None
+class BasicEnemy (DynamicObject):
+    def __init__(self, position, sprite_path):
+        super().__init__(position, sprite_path)
+
         self.size = pg.Vector2(SHIP_SIZE, SHIP_SIZE)
-        self.position = position
         self.speed = 200
-
+        
         # rotate the image
         self.image = pg.transform.scale(self.image, self.size)
         self.image = pg.transform.rotate(self.image, 180)

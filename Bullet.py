@@ -1,13 +1,12 @@
 from GameObject import *
 
 class Bullet (GameObject):
-    def __init__(self, position_x, position_y):
-        super().__init__()
-        image_path = DATA_PATH + 'sprites/bullet.png'
-        self.image = pg.image.load(image_path) if image_path else None
+    def __init__(self, input_position, sprite_path):
+        super().__init__(sprite_path)
+
         self.size = pg.Vector2(10, 10)
-        self.position.x = position_x - self.size.x / 2
-        self.position.y = position_y - self.size.y / 2
+        self.position.x = input_position.x - self.size.x / 2
+        self.position.y = input_position.y - self.size.y / 2
         self.speed = 400
 
         self.initialize()

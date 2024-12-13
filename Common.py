@@ -2,7 +2,11 @@ import pygame as pg
 import sys
 from enum import Enum
 
-DATA_PATH = 'data/'
+DATA_PATH = 'data'
+UNIT_SPRITES_PATH = 'data/sprites/units/'
+WEAPON_SPRITES_PATH = 'data/sprites/weapons/'
+BACKGROUND_SPRITES_PATH = 'data/sprites/background/'
+
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 BACKGROUND_COLOR = (30, 30, 30)

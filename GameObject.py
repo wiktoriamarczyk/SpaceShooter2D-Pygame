@@ -1,11 +1,11 @@
 from Common import *
 
 class GameObject:
-    def __init__(self):
+    def __init__(self, sprite_path=None):
         self.size = pg.Vector2(0, 0)
         self.position = pg.Vector2(0, 0)
         self.speed = 0
-        self.image = None
+        self.image = sprite_path if sprite_path else None
         self.alive = True
         self.rect = None
 
