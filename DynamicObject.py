@@ -2,8 +2,8 @@ from GameObject import *
 from Common import *
 
 class DynamicObject (GameObject):
-    def __init__(self, position, sprite_path):
-        super().__init__(sprite_path)
+    def __init__(self, position, sprite):
+        super().__init__(sprite)
 
         self.position = position
         self.speed = 100

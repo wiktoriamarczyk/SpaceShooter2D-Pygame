@@ -1,8 +1,8 @@
 from GameObject import *
 
 class Bullet (GameObject):
-    def __init__(self, input_position, sprite_path):
-        super().__init__(sprite_path)
+    def __init__(self, input_position, sprite):
+        super().__init__(sprite)
 
         self.size = pg.Vector2(10, 10)
         self.position.x = input_position.x - self.size.x / 2

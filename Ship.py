@@ -1,8 +1,8 @@
 from GameObject import *
 
 class Ship (GameObject):
-    def __init__(self, sprite_path):
-        super().__init__(sprite_path)
+    def __init__(self, sprite):
+        super().__init__(sprite)
 
         self.size = pg.Vector2(SHIP_SIZE, SHIP_SIZE)
         self.position = pg.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)

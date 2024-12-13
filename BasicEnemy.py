@@ -1,8 +1,8 @@
 from DynamicObject import *
 
 class BasicEnemy (DynamicObject):
-    def __init__(self, position, sprite_path):
-        super().__init__(position, sprite_path)
+    def __init__(self, position, sprite):
+        super().__init__(position, sprite)
 
         self.size = pg.Vector2(SHIP_SIZE, SHIP_SIZE)
         self.speed = 200
