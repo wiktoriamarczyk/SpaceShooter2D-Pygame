@@ -8,8 +8,9 @@ class Bullet (GameObject):
         self.size = pg.Vector2(10, 10)
         self.position.x = position_x - self.size.x / 2
         self.position.y = position_y - self.size.y / 2
-        self.image = pg.transform.scale(self.image, self.size)
         self.speed = 400
+
+        self.initialize()
 
 
     def update(self, delta_time):
@@ -18,7 +19,8 @@ class Bullet (GameObject):
         direction = pg.Vector2(1, -1)
         self.position.y += direction.y * self.speed * delta_time
 
-        if (self.position.y > SCREEN_HEIGHT or self.position.x < 0 or self.position.x > SCREEN_WIDTH):
+        if (self.position.y > SCREEN_HEIGHT or self.position.y < 0 
+            or self.position.x < 0 or self.position.x > SCREEN_WIDTH):
             self.alive = False
 
 
