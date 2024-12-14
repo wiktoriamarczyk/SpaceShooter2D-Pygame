@@ -28,3 +28,12 @@ class GameObject:
 
     def draw_rect(self, screen):
         pg.draw.rect(screen, (255, 255, 255), self.rect, 1)
+
+    def apply_color(self):
+        """
+        Applies the specified color to the image using a blend mode.
+        """
+        colored_image = pg.Surface(self.image.get_size(), flags=pg.SRCALPHA)
+        colored_image.fill(self.color)  # Wypełnienie kolorem
+
+        self.image.blit(colored_image, (0, 0), special_flags=pg.BLEND_RGBA_MULT)

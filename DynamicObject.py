@@ -14,7 +14,7 @@ class DynamicObject (GameObject):
         super().update(delta_time)
 
         # check if the object is out of bounds
-        if (self.position.y > SCREEN_HEIGHT or self.position.x < 0 or self.position.x > SCREEN_WIDTH):
+        if (self.position.y > SCREEN_HEIGHT + self.size.y or self.position.x < 0 - self.size.x or self.position.x > SCREEN_WIDTH + self.size.x):
             self.alive = False
 
 

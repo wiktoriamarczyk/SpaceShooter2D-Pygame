@@ -1,10 +1,16 @@
 from DynamicObject import *
 
 class BackgroundObject (DynamicObject):
-    def __init__(self, position, sprite, size):
+    def __init__(self, position, sprite, size, depth, color=None):
         super().__init__(position, sprite)
 
-        self.size = size
+        self.size = size * 0.5 * depth
+        self.speed = self.speed / depth
+        self.color = color
+
+        # color the image
+        if self.color is not None:
+            self.apply_color()
 
         self.initialize()
 
@@ -14,10 +20,6 @@ class BackgroundObject (DynamicObject):
 
         # move down
         self.position.y += self.speed * delta_time
-
-        # check if the object is out of bounds
-        if (self.position.y > SCREEN_HEIGHT or self.position.x < 0 or self.position.x > SCREEN_WIDTH):
-            self.alive = False
 
 
     def render(self, screen):
