@@ -24,6 +24,11 @@ class Engine:
         self.init_time_variables()
 
         # resources
+        self.background = pg.image.load(BACKGROUND_PATH)
+        self.scroll_x = 0
+        self.scroll_y = 0
+        self.background_x = 0
+
         self.units_sprites = []
         self.weapon_sprites = []
         self.asteroids_sprites = []
@@ -41,6 +46,7 @@ class Engine:
             self.clock.tick(self.frame_per_sec)
             delta_time = 1.0 / self.frame_per_sec
             self.update(delta_time)
+            self.scroll_background()
             self.render()
             # update the display
             pg.display.flip()
@@ -76,6 +82,19 @@ class Engine:
         for game_object in self.game_objects:
             game_object.update(delta_time)
         self.ship.update(delta_time)
+
+
+    def scroll_background(self):
+        # Scroll the background horizontally
+        self.scroll_y += 1
+        
+        # Draw the background twice to create seamless scrolling effect
+        self.screen.blit(self.background, (self.scroll_x, self.scroll_y))
+        self.screen.blit(self.background, (self.scroll_x, self.scroll_y - self.background.get_height()))
+
+        # Reset the background position when it goes off screen
+        if self.scroll_y >= self.background.get_height():
+            self.scroll_y = 0
 
 
     def fire_bullet(self):
@@ -116,19 +135,21 @@ class Engine:
 
     def spawn_asteroids(self):
         """Spawns an asteroid."""
-        size_range = (ASTEROID_SIZE // 2, ASTEROID_SIZE)
+        size_range = (ASTEROID_MIN_SIZE, ASTEROID_MAX_SIZE)
         depth_range = (1, 2)
-        x_position = random.randint(2 * ASTEROID_SIZE, SCREEN_WIDTH - 2 * ASTEROID_SIZE)
-        position = pg.Vector2(x_position, -ASTEROID_SIZE)
+        x_position = random.randint(2 * size_range[1], SCREEN_WIDTH - 2 * size_range[1])
+        position = pg.Vector2(x_position, -size_range[1])
         self.spawn_background_object(self.asteroids_sprites, position, size_range, depth_range)
 
 
     def spawn_star(self, position):
         """Spawns a single star at the specified position."""
         color=None
-        if random.randint(1, 5) == 4:
+        rand_color = random.randint(1, 4)
+
+        if rand_color == 1:
             color = random.choice(STAR_COLORS)
-        size_range = (STAR_SIZE // 2, STAR_SIZE)
+        size_range = (STAR_MIN_SIZE, STAR_MAX_SIZE)
         depth_range = (1, 2)
         self.spawn_background_object(self.stars_sprites, position, size_range, depth_range, color)
 
@@ -136,15 +157,15 @@ class Engine:
     def spawn_init_stars(self):
         """Spawns initial stars randomly across the screen."""
         for _ in range(25):
-            x_position = random.randint(STAR_SIZE, SCREEN_WIDTH - STAR_SIZE)
-            y_position = random.randint(STAR_SIZE, SCREEN_HEIGHT - STAR_SIZE)
+            x_position = random.randint(STAR_MAX_SIZE, SCREEN_WIDTH - STAR_MAX_SIZE)
+            y_position = random.randint(STAR_MAX_SIZE, SCREEN_HEIGHT - STAR_MAX_SIZE)
             self.spawn_star(pg.Vector2(x_position, y_position))
 
 
     def spawn_stars(self):
         """Spawns a new star at the top of the screen."""
-        x_position = random.randint(STAR_SIZE, SCREEN_WIDTH - STAR_SIZE)
-        y_position = -STAR_SIZE
+        x_position = random.randint(STAR_MAX_SIZE, SCREEN_WIDTH - STAR_MAX_SIZE)
+        y_position = -STAR_MAX_SIZE
         self.spawn_star(pg.Vector2(x_position, y_position))
 
     # ------------------------------------------------------

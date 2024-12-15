@@ -7,14 +7,18 @@ UNIT_SPRITES_PATH = 'data/sprites/units/'
 WEAPON_SPRITES_PATH = 'data/sprites/weapons/'
 ASTEROID_SPRITES_PATH = 'data/sprites/background/asteroids/'
 STARS_SPRITES_PATH = 'data/sprites/background/stars/'
+BACKGROUND_PATH = 'data/sprites/background/background.png'
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 BACKGROUND_COLOR = (30, 30, 30)
-STAR_COLORS = [(255,255,255), (239,234,232), (185, 217, 235), (174, 242, 231), (255, 186, 255), (187, 250, 223), (181, 195, 245)]
+STAR_COLORS = [(255,255,255), (238,116,17), (77,194,145), (227,220,82)]
 SHIP_SIZE = 64
-STAR_SIZE = 16
-ASTEROID_SIZE = 96
+
+STAR_MIN_SIZE = 12
+STAR_MAX_SIZE = 18
+ASTEROID_MIN_SIZE = 64
+ASTEROID_MAX_SIZE = 96
 
 class EnemyTypes(Enum) :
     BASIC = 1
