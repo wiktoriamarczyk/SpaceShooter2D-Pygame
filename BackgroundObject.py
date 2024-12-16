@@ -10,7 +10,7 @@ class BackgroundObject (DynamicObject):
 
         # color the image
         if self.color is not None:
-            self.apply_color()
+            self._apply_color()
 
         self.initialize()
 

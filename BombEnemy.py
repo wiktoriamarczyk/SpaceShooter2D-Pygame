@@ -1,16 +1,14 @@
 import math
-from DynamicObject import *
+from Enemy import *
 
-class BombEnemy (DynamicObject):
+
+class BombEnemy (Enemy):
     def __init__(self, position, sprite):
-        super().__init__(position, sprite)
-
-        self.size = pg.Vector2(SHIP_SIZE, SHIP_SIZE)
-        self.speed = 200
         
-        # rotate the image
-        self.image = pg.transform.scale(self.image, self.size)
-        self.image = pg.transform.rotate(self.image, 180)
+        from Engine import Engine
+        bullet_sprite = Engine._instance.get_bullet_texture("bomb-ship-weapon.png")
+        
+        super().__init__(position, sprite, bullet_sprite)
 
         self.initialize()
 

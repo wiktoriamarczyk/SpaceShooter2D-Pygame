@@ -8,7 +8,15 @@ from BasicEnemy import *
 from BombEnemy import *
 from BackgroundObject import *
 
+
 class Engine:
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(Engine, cls).__new__(cls)
+        return cls._instance
+
     def __init__(self):
         # main variables
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -21,7 +29,7 @@ class Engine:
         self.enemy_type = BasicEnemy
 
         # time variables
-        self.init_time_variables()
+        self.__init_time_variables()
 
         # resources
         self.background = pg.image.load(BACKGROUND_PATH)
@@ -33,42 +41,56 @@ class Engine:
         self.weapon_sprites = []
         self.asteroids_sprites = []
         self.stars_sprites = []
-        self.load_all_images()
+        self.__load_all_images()
 
-        self.spawn_init_stars()
-        self.init_game_objects()
+        self.__spawn_init_stars()
+        self.__init_game_objects()
 
+    # ----------------- Public functions -----------------
 
     def run(self):
         while True:
-            self.handle_events()
+            self.__handle_events()
             self.screen.fill(BACKGROUND_COLOR)
             self.clock.tick(self.frame_per_sec)
             delta_time = 1.0 / self.frame_per_sec
-            self.update(delta_time)
-            self.scroll_background()
-            self.render()
+            self.__update(delta_time)
+            self.__scroll_background()
+            self.__render()
             # update the display
             pg.display.flip()
 
 
-    def handle_events(self):
+    def get_ship_position(self):
+        return self.ship.position
+    
+
+    def get_bullet_texture(self, texture_name):
+        return self.weapon_sprites[texture_name]
+    
+
+    def add_object(self, game_object):
+        self.game_objects.append(game_object)
+
+    # ----------------- Main functions -----------------
+
+    def __handle_events(self):
         for event in pg.event.get():
                 if event.type == pg.QUIT:
                     pg.quit()
                     sys.exit()
                 if event.type == pg.KEYUP:
                      if event.key == pg.K_SPACE:
-                        self.fire_bullet()
+                        self.__fire_bullet()
 
 
-    def render(self):
+    def __render(self):
         for game_object in self.game_objects:
             game_object.render(self.screen)
         self.ship.render(self.screen)
 
 
-    def update(self, delta_time):
+    def __update(self, delta_time):
         current_time = time.time()
 
         # remove dead game objects
@@ -77,14 +99,14 @@ class Engine:
                 self.game_objects.remove(go)
                 go.__del__()
 
-        self.spawn_time_objects(current_time)
+        self.__spawn_time_objects(current_time)
 
         for game_object in self.game_objects:
             game_object.update(delta_time)
         self.ship.update(delta_time)
 
 
-    def scroll_background(self):
+    def __scroll_background(self):
         # Scroll the background horizontally
         self.scroll_y += 1
         
@@ -96,14 +118,23 @@ class Engine:
         if self.scroll_y >= self.background.get_height():
             self.scroll_y = 0
 
+    
+    # ------------------------------------------------------
 
-    def fire_bullet(self):
+    # ----------------- Game objects management -----------------
+
+    def __init_game_objects(self):
+        ship = Ship(self.units_sprites['ship.png'])
+        self.ship = ship
+
+
+    def __fire_bullet(self):
         bullet_pos = self.ship.position
         bullet = Bullet(pg.Vector2(bullet_pos.x + 5, bullet_pos.y - 10), self.weapon_sprites['bullet.png'])
         self.game_objects.append(bullet)
 
 
-    def spawn_enemy(self):
+    def __spawn_enemy(self):
         x_position = random.randint(2*SHIP_SIZE, SCREEN_WIDTH - 2*SHIP_SIZE)
         
         sprite_path = "bullet-ship.png"
@@ -113,9 +144,11 @@ class Engine:
         enemy = self.enemy_type(pg.Vector2(x_position, -SHIP_SIZE), self.units_sprites[sprite_path])
         self.game_objects.append(enemy)
 
+    # ------------------------------------------------------
+
     # ----------------- Background objects -----------------
 
-    def spawn_background_object(self, sprite_list, position, size_range, depth_range, color=None):
+    def __spawn_background_object(self, sprite_list, position, size_range, depth_range, color=None):
         """
         Spawns a generic background object.
 
@@ -133,16 +166,16 @@ class Engine:
         self.game_objects.append(background_object)
 
 
-    def spawn_asteroids(self):
+    def __spawn_asteroids(self):
         """Spawns an asteroid."""
         size_range = (ASTEROID_MIN_SIZE, ASTEROID_MAX_SIZE)
         depth_range = (1, 2)
         x_position = random.randint(2 * size_range[1], SCREEN_WIDTH - 2 * size_range[1])
         position = pg.Vector2(x_position, -size_range[1])
-        self.spawn_background_object(self.asteroids_sprites, position, size_range, depth_range)
+        self.__spawn_background_object(self.asteroids_sprites, position, size_range, depth_range)
 
 
-    def spawn_star(self, position):
+    def __spawn_star(self, position):
         """Spawns a single star at the specified position."""
         color=None
         rand_color = random.randint(1, 4)
@@ -151,38 +184,35 @@ class Engine:
             color = random.choice(STAR_COLORS)
         size_range = (STAR_MIN_SIZE, STAR_MAX_SIZE)
         depth_range = (1, 2)
-        self.spawn_background_object(self.stars_sprites, position, size_range, depth_range, color)
+        self.__spawn_background_object(self.stars_sprites, position, size_range, depth_range, color)
 
 
-    def spawn_init_stars(self):
+    def __spawn_init_stars(self):
         """Spawns initial stars randomly across the screen."""
         for _ in range(25):
             x_position = random.randint(STAR_MAX_SIZE, SCREEN_WIDTH - STAR_MAX_SIZE)
             y_position = random.randint(STAR_MAX_SIZE, SCREEN_HEIGHT - STAR_MAX_SIZE)
-            self.spawn_star(pg.Vector2(x_position, y_position))
+            self.__spawn_star(pg.Vector2(x_position, y_position))
 
 
-    def spawn_stars(self):
+    def __spawn_stars(self):
         """Spawns a new star at the top of the screen."""
         x_position = random.randint(STAR_MAX_SIZE, SCREEN_WIDTH - STAR_MAX_SIZE)
         y_position = -STAR_MAX_SIZE
-        self.spawn_star(pg.Vector2(x_position, y_position))
+        self.__spawn_star(pg.Vector2(x_position, y_position))
 
     # ------------------------------------------------------
 
-    def init_game_objects(self):
-        ship = Ship(self.units_sprites['ship.png'])
-        self.ship = ship
+    # ----------------- Resource loading -----------------
+
+    def __load_all_images(self):
+        self.units_sprites = self.__load_images(UNIT_SPRITES_PATH)
+        self.asteroids_sprites = self.__load_images(ASTEROID_SPRITES_PATH)
+        self.weapon_sprites = self.__load_images(WEAPON_SPRITES_PATH)
+        self.stars_sprites = self.__load_images(STARS_SPRITES_PATH)
 
 
-    def load_all_images(self):
-        self.units_sprites = self.load_images(UNIT_SPRITES_PATH)
-        self.asteroids_sprites = self.load_images(ASTEROID_SPRITES_PATH)
-        self.weapon_sprites = self.load_images(WEAPON_SPRITES_PATH)
-        self.stars_sprites = self.load_images(STARS_SPRITES_PATH)
-
-
-    def load_images(self, dir_path):
+    def __load_images(self, dir_path):
         sprite_dict = {}
         for root, dirs, files in os.walk(dir_path):
             for file in files:
@@ -192,8 +222,11 @@ class Engine:
                     sprite_dict[file] = img
         return sprite_dict
     
+    # ------------------------------------------------------
+        
+    # ----------------- Time objects management -----------------
 
-    def init_time_variables(self):
+    def __init_time_variables(self):
         self.last_enemy_time = time.time()
         self.new_enemy_time = 3
         self.last_wave_time = time.time()
@@ -206,7 +239,7 @@ class Engine:
         self.stars_spawn_time = 0.2
 
 
-    def spawn_time_objects(self, current_time):
+    def __spawn_time_objects(self, current_time):
         # check if it is time to spawn new wave of enemies
         if current_time - self.last_wave_time >= self.new_wave_time:
             print('New wave')
@@ -215,16 +248,18 @@ class Engine:
 
         # check if it is time to spawn a new enemy
         if current_time - self.last_enemy_time >= self.new_enemy_time:
-            self.spawn_enemy()
+            self.__spawn_enemy()
             self.last_enemy_time = current_time
 
         # check if it is time to spawn a new background object
         if current_time - self.last_asteroid_spawn_time >= self.asteroid_spawn_time:
-            self.spawn_asteroids()
+            self.__spawn_asteroids()
             self.last_asteroid_spawn_time = current_time
 
 
         # check if it is time to spawn a new stars
         if current_time - self.last_stars_spawn_time >= self.stars_spawn_time:
-            self.spawn_stars()
+            self.__spawn_stars()
             self.last_stars_spawn_time = current_time
+
+    # ------------------------------------------------------

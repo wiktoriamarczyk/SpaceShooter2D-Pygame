@@ -13,10 +13,14 @@ class Ship (GameObject):
 
     def update(self, delta_time):
         super().update(delta_time)
-        self.handle_movement(delta_time)
+        self.__handle_movement(delta_time)
 
 
-    def handle_movement(self, delta_time):
+    def render(self, screen):
+        super().render(screen)
+
+
+    def __handle_movement(self, delta_time):
         keys = pg.key.get_pressed()  
         direction = pg.Vector2(1, -1)
 
@@ -28,7 +32,3 @@ class Ship (GameObject):
             self.position.x -= direction.x * self.speed * delta_time
         if keys[pg.K_RIGHT] and self.position.x < SCREEN_WIDTH - SHIP_SIZE / 2:
             self.position.x += direction.x * self.speed * delta_time
-
-
-    def render(self, screen):
-        super().render(screen)

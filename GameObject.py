@@ -9,6 +9,9 @@ class GameObject:
         self.alive = True
         self.rect = None
 
+    def __del__(self):
+        pass
+
     def initialize(self):
         self.image = pg.transform.scale(self.image, self.size)
         self.rect = self.image.get_rect() 
@@ -20,16 +23,13 @@ class GameObject:
     def update(self, delta_time):
         self.rect.center = self.position
 
-    def handle_event(self, event):
+    def _handle_event(self, event):
         pass
 
-    def __del__(self):
-        pass
-
-    def draw_rect(self, screen):
+    def _draw_rect(self, screen):
         pg.draw.rect(screen, (255, 255, 255), self.rect, 1)
 
-    def apply_color(self):
+    def _apply_color(self):
         """
         Applies the specified color to the image using a blend mode.
         """

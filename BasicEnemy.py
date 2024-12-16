@@ -1,15 +1,12 @@
-from DynamicObject import *
+from Enemy import *
 
-class BasicEnemy (DynamicObject):
+class BasicEnemy (Enemy):
     def __init__(self, position, sprite):
-        super().__init__(position, sprite)
 
-        self.size = pg.Vector2(SHIP_SIZE, SHIP_SIZE)
-        self.speed = 200
-        
-        # rotate the image
-        self.image = pg.transform.scale(self.image, self.size)
-        self.image = pg.transform.rotate(self.image, 180)
+        from Engine import Engine
+        bullet_sprite = Engine._instance.get_bullet_texture("bullet-ship-weapon.png")
+
+        super().__init__(position, sprite, bullet_sprite)
 
         self.initialize()
 
@@ -19,6 +16,21 @@ class BasicEnemy (DynamicObject):
 
         # move down
         self.position.y += self.speed * delta_time
+
+        if super()._ready_to_shoot(delta_time):
+            self._shoot()
+
+
+    def _shoot(self):
+        from Engine import Engine
+        from Bullet import Bullet
+
+        bullet_offset = 10
+        bullet1 = Bullet(pg.Vector2(self.position.x - bullet_offset, self.position.y + bullet_offset), self.bullet_sprite, ObjectDirection.DOWN)
+        bullet2 = Bullet(pg.Vector2(self.position.x + 3 * bullet_offset, self.position.y + bullet_offset), self.bullet_sprite, ObjectDirection.DOWN)
+
+        Engine._instance.add_object(bullet1)
+        Engine._instance.add_object(bullet2)
 
 
     def render(self, screen):
