@@ -1,7 +1,6 @@
 import math
 from Enemy import *
 
-
 class BombEnemy (Enemy):
     def __init__(self, position, sprite):
         
@@ -9,6 +8,10 @@ class BombEnemy (Enemy):
         bullet_sprite = Engine._instance.get_bullet_texture("bomb-ship-weapon.png")
         
         super().__init__(position, sprite, bullet_sprite)
+
+        self.start_position = position
+        self.direction = ObjectDirection.LEFT
+        self.shooting_timer = 0.75
 
         self.initialize()
 
@@ -19,8 +22,28 @@ class BombEnemy (Enemy):
 
         # move sin wave
         self.position.y += self.speed * delta_time
-        self.position.x += math.sin(self.timer * 5) * 200 * delta_time
+        horizontal_displacement = math.sin(self.timer * 5) * 200 * delta_time
+        self.position.x += horizontal_displacement
 
+        if horizontal_displacement > 0:
+            self.direction = ObjectDirection.RIGHT
+        elif horizontal_displacement < 0:
+            self.direction = ObjectDirection.LEFT
+
+
+        if super()._ready_to_shoot(delta_time):
+            self._shoot()
+
+
+    def _shoot(self):
+        super()._shoot()
+        
+        from Engine import Engine
+        from Bomb import Bomb
+        
+        bomb = Bomb(pg.Vector2(self.position.x, self.position.y), self.bullet_sprite, self.direction)
+        Engine._instance.add_object(bomb)
+        
 
     def render(self, screen):
         super().render(screen)

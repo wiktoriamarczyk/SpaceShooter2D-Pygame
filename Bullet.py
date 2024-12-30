@@ -1,10 +1,10 @@
 from DynamicObject import *
 
 class Bullet (DynamicObject):
-    def __init__(self, position, sprite, self_direction=ObjectDirection.UP):
+    def __init__(self, position, sprite, direction=ObjectDirection.UP):
         super().__init__(position, sprite)
 
-        self.direction = self_direction
+        self.direction = direction
         self.size = pg.Vector2(BULLET_SIZE, BULLET_SIZE)
         self.position.x = position.x - self.size.x / 2
         self.position.y = position.y - self.size.y / 2

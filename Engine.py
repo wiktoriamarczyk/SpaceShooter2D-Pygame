@@ -6,6 +6,7 @@ from Ship import *
 from Bullet import *
 from BasicEnemy import *
 from BombEnemy import *
+from TargetingEnemey import TargetingEnemy
 from BackgroundObject import *
 
 
@@ -140,6 +141,8 @@ class Engine:
         sprite_path = "bullet-ship.png"
         if self.enemy_type == BombEnemy:
             sprite_path = "bomb-ship.png"
+        elif self.enemy_type == TargetingEnemy:
+            sprite_path = "targeting-ship.png"
 
         enemy = self.enemy_type(pg.Vector2(x_position, -SHIP_SIZE), self.units_sprites[sprite_path])
         self.game_objects.append(enemy)
@@ -228,9 +231,10 @@ class Engine:
 
     def __init_time_variables(self):
         self.last_enemy_time = time.time()
-        self.new_enemy_time = 3
+        self.new_enemy_time = 2
+
         self.last_wave_time = time.time()
-        self.new_wave_time = 10
+        self.new_wave_time = 6
 
         self.last_asteroid_spawn_time = time.time()
         self.asteroid_spawn_time = 3
@@ -242,9 +246,12 @@ class Engine:
     def __spawn_time_objects(self, current_time):
         # check if it is time to spawn new wave of enemies
         if current_time - self.last_wave_time >= self.new_wave_time:
-            print('New wave')
             self.last_wave_time = current_time
-            self.enemy_type = BombEnemy
+            if self.enemy_type == BombEnemy:
+                self.enemy_type = TargetingEnemy
+            else:
+                self.enemy_type = BombEnemy
+
 
         # check if it is time to spawn a new enemy
         if current_time - self.last_enemy_time >= self.new_enemy_time:
@@ -256,8 +263,7 @@ class Engine:
             self.__spawn_asteroids()
             self.last_asteroid_spawn_time = current_time
 
-
-        # check if it is time to spawn a new stars
+        # check if it is time to spawn stars
         if current_time - self.last_stars_spawn_time >= self.stars_spawn_time:
             self.__spawn_stars()
             self.last_stars_spawn_time = current_time
