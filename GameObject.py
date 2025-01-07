@@ -6,10 +6,11 @@ class GameObject:
         self.position = pg.Vector2(0, 0)
         self.speed = 0
         self.image = sprite if sprite else None
+        self.health = 30
         self.alive = True
         self.rect = None
 
-    def __del__(self):
+    def del__(self):
         pass
 
     def initialize(self):
@@ -19,9 +20,20 @@ class GameObject:
     def render(self, screen):
         if self.image:
             screen.blit(self.image, self.rect.topleft)
+        #self._draw_rect(screen)
 
     def update(self, delta_time):
         self.rect.center = self.position
+
+    def get_rect(self):
+        return self.rect
+    
+    def update_health(self, damage):
+        if self.health > 0:
+            self.health -= damage
+
+    def clear_health(self):
+        self.health = 0
 
     def _handle_event(self, event):
         pass

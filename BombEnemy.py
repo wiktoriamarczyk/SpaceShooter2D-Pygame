@@ -5,19 +5,24 @@ class BombEnemy (Enemy):
     def __init__(self, position, sprite):
         
         from Engine import Engine
-        bullet_sprite = Engine._instance.get_bullet_texture("bomb-ship-weapon.png")
+        bullet_sprite = Engine._instance.get_sprite(WEAPONS_PATH + "/bomb-ship-weapon.png")
         
         super().__init__(position, sprite, bullet_sprite)
 
         self.start_position = position
         self.direction = ObjectDirection.LEFT
         self.shooting_timer = 0.75
+        self.health = 40
 
         self.initialize()
 
 
     def update(self, delta_time):
         super().update(delta_time)
+
+        if self.is_exploding == True:
+            return
+        
         self.timer += delta_time
 
         # move sin wave

@@ -7,12 +7,15 @@ class Ship (GameObject):
         self.size = pg.Vector2(SHIP_SIZE, SHIP_SIZE)
         self.position = pg.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         self.speed = 300
+        self.health = 1000
+        self.dealing_damage = 25
 
         self.initialize()
 
 
     def update(self, delta_time):
         super().update(delta_time)
+
         self.__handle_movement(delta_time)
 
 

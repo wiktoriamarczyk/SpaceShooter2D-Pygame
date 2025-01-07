@@ -1,8 +1,8 @@
 import math
 import random
-from DynamicObject import *
+from Weapon import *
 
-class Bomb (DynamicObject):
+class Bomb (Weapon):
     def __init__(self, position, sprite, direction):
         super().__init__(position, sprite)
 
@@ -11,6 +11,8 @@ class Bomb (DynamicObject):
         self.position.y = position.y - self.size.y / 2
         self.speed = 200
         self.alive_time = 5
+        self.dealing_damage = 10
+        self.is_explosive = True
 
         self.velocity = pg.Vector2(25, -100)
         self.gravity = 300
@@ -25,6 +27,9 @@ class Bomb (DynamicObject):
 
     def update(self, delta_time):
         super().update(delta_time)
+
+        if self.is_exploding == True:
+            return
 
         # Update velocity in vertical direction (gravity)
         self.velocity.y += self.gravity * delta_time

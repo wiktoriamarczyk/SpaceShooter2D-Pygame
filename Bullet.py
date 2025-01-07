@@ -1,6 +1,6 @@
-from DynamicObject import *
+from Weapon import *
 
-class Bullet (DynamicObject):
+class Bullet (Weapon):
     def __init__(self, position, sprite, direction=ObjectDirection.UP):
         super().__init__(position, sprite)
 
@@ -9,6 +9,7 @@ class Bullet (DynamicObject):
         self.position.x = position.x - self.size.x / 2
         self.position.y = position.y - self.size.y / 2
         self.speed = 400
+
 
         if self.direction == ObjectDirection.DOWN:
             # rotate the image

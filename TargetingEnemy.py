@@ -6,16 +6,22 @@ class TargetingEnemy (Enemy):
     def __init__(self, position, sprite):
         
         from Engine import Engine
-        bullet_sprite = Engine._instance.get_bullet_texture("torpedo0.png")
+        bullet_sprite = Engine._instance.get_sprite(WEAPONS_PATH + "/torpedo0.png")
         
         super().__init__(position, sprite, bullet_sprite)
-        self.speed = 300
+        self.speed = 250
+        self.shooting_timer = 1.5
+        self.health = 50
 
         self.initialize()
 
 
     def update(self, delta_time):
         super().update(delta_time)
+
+        if self.is_exploding == True:
+            return
+
         self.timer += delta_time
 
         # move down

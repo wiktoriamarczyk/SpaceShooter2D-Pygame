@@ -4,7 +4,7 @@ class BasicEnemy (Enemy):
     def __init__(self, position, sprite):
 
         from Engine import Engine
-        bullet_sprite = Engine._instance.get_bullet_texture("bullet-ship-weapon.png")
+        bullet_sprite = Engine._instance.get_sprite(WEAPONS_PATH + "/bullet-ship-weapon.png")
 
         super().__init__(position, sprite, bullet_sprite)
 
@@ -13,6 +13,9 @@ class BasicEnemy (Enemy):
 
     def update(self, delta_time):
         super().update(delta_time)
+
+        if self.is_exploding == True:
+            return
 
         # move down
         self.position.y += self.speed * delta_time

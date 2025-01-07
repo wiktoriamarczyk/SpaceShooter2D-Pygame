@@ -9,6 +9,7 @@ class Enemy (DynamicObject):
         self.speed = 200
         self.shooting_timer = 0.5
         self.last_shot = 0
+        self.is_explosive = True
         
         # rotate the image
         self.image = pg.transform.scale(self.image, self.size)
@@ -21,6 +22,10 @@ class Enemy (DynamicObject):
 
     def render(self, screen):
         super().render(screen)
+
+
+    def get_dealing_damage(self):
+        return self.dealing_damage
 
 
     def _ready_to_shoot(self, delta_time):

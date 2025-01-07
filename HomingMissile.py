@@ -1,7 +1,7 @@
 import math
-from DynamicObject import *
+from Weapon import *
 
-class HomingMissile (DynamicObject):
+class HomingMissile (Weapon):
     def __init__(self, position, sprite, target):
         super().__init__(position, sprite)
 
@@ -10,7 +10,9 @@ class HomingMissile (DynamicObject):
         self.position.x = position.x - self.size.x / 2
         self.position.y = position.y - self.size.y / 2
         self.speed = 300
-        self.alive_time = 5
+        self.alive_time = 3
+        self.dealing_damage = 15
+        self.is_explosive = True
 
         # Precompute rotations
         self.original_image = self.image
@@ -32,7 +34,8 @@ class HomingMissile (DynamicObject):
     def update(self, delta_time):
         super().update(delta_time)
 
-        self.alive_time -= delta_time
+        if self.is_exploding == True:
+            return
 
         direction = (self.target - self.position).normalize()
 
@@ -48,8 +51,8 @@ class HomingMissile (DynamicObject):
         perp_direction = pg.Vector2(-direction.y, direction.x)  # Perpendicular vector
         self.position += perp_direction * math.sin(self.time * self.oscillation_frequency) * self.amplitude * delta_time
 
-        # Check if the bomb has reached the target or it reached its lifetime
-        if self.position.distance_to(self.target) < self.size.x or self.alive_time <= 0:
+        # Check if the bomb has reached the target
+        if self.position.distance_to(self.target) < self.size.x:
             self.alive = False
 
 

@@ -3,11 +3,12 @@ import sys
 from enum import Enum
 
 DATA_PATH = 'data'
-UNIT_SPRITES_PATH = 'data/sprites/units/'
-WEAPON_SPRITES_PATH = 'data/sprites/weapons/'
-ASTEROID_SPRITES_PATH = 'data/sprites/background/asteroids/'
-STARS_SPRITES_PATH = 'data/sprites/background/stars/'
-BACKGROUND_PATH = 'data/sprites/background/background.png'
+SPRITES_PATH = DATA_PATH + '/sprites'
+BACKGROUND_PATH = SPRITES_PATH + '/background/background.png'
+ASTEROIDS_PATH = SPRITES_PATH + '/background/asteroids'
+STARS_PATH = SPRITES_PATH + '/background/stars'
+UNITS_PATH = SPRITES_PATH + '/units'
+WEAPONS_PATH = SPRITES_PATH + '/weapons'
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -22,11 +23,23 @@ STAR_MAX_SIZE = 18
 ASTEROID_MIN_SIZE = 64
 ASTEROID_MAX_SIZE = 96
 
+COLLISION_DEALT_DAMAGE = 10
+
+class EnemySprites(Enum) :
+    BasicEnemy = UNITS_PATH + "/bullet-ship.png"
+    BombEnemy = UNITS_PATH + "/bomb-ship.png"
+    TargetingEnemy = UNITS_PATH + "/targeting-ship.png"
+
 class EnemyTypes(Enum) :
-    BASIC = 1
-    SINUSOIDAL = 2
-    DIAGONAL = 3
-    ZIGZAG = 4
+    BasicEnemy = 0
+    BombEnemy = 1
+    TargetingEnemy = 2
+
+ENEMY_TYPE_TO_SPRITE = {
+    EnemyTypes.BasicEnemy: EnemySprites.BasicEnemy,
+    EnemyTypes.BombEnemy: EnemySprites.BombEnemy,
+    EnemyTypes.TargetingEnemy: EnemySprites.TargetingEnemy
+}
 
 class ObjectDirection(Enum) :
     UP = 1
