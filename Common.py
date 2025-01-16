@@ -15,14 +15,16 @@ BACKGROUND_COLOR = (30, 30, 30)
 STAR_COLORS = [(255,255,255), (238,116,17), (77,194,145), (227,220,82)]
 SHIP_SIZE = 64
 BULLET_SIZE = 16
-BOMB_SIZE = 32
+BOMB_SIZE = POWER_UP_SIZE = 32
 
 STAR_MIN_SIZE = 12
 STAR_MAX_SIZE = 18
 ASTEROID_MIN_SIZE = 64
 ASTEROID_MAX_SIZE = 96
 
-COLLISION_DEALT_DAMAGE = 10
+COLLISION_DEALT_DAMAGE = 2
+HEALTH_POWER_UP_AMOUNT = 250
+SHIELD_POWER_UP_TIME = 3
 
 class EnemySprites(Enum) :
     BasicEnemy = UNITS_PATH + "/bullet-ship.png"
@@ -51,6 +53,10 @@ class GameStateID(Enum) :
     MAIN_MENU = 1
     GAME = 2
     GAME_OVER = 3
+
+class PowerUpTypes(Enum) :
+    HEALTH = 0
+    SHIELD = 1
 
 def are_floats_equal(a: float, b: float, tolerance: float = 1e-3) -> bool:
     return abs(a - b) <= tolerance

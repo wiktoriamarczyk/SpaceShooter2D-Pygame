@@ -1,4 +1,5 @@
-from Weapon import *
+from Common import *
+from Weapon import Weapon
 
 class Bullet (Weapon):
     def __init__(self, position, sprite, direction=ObjectDirection.UP):
@@ -9,7 +10,6 @@ class Bullet (Weapon):
         self.position.x = position.x - self.size.x / 2
         self.position.y = position.y - self.size.y / 2
         self.speed = 400
-
 
         if self.direction == ObjectDirection.DOWN:
             # rotate the image
@@ -23,7 +23,6 @@ class Bullet (Weapon):
         super().update(delta_time)
 
         direction = pg.Vector2(1, -1)
-
         if self.direction == ObjectDirection.DOWN:
             direction = pg.Vector2(1, 1)
 

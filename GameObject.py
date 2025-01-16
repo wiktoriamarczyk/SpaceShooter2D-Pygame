@@ -10,12 +10,14 @@ class GameObject:
         self.max_health = 30
         self.alive = True
         self.rect = None
+        self.original_image = self.image.copy()
 
     def del__(self):
         pass
 
     def initialize(self):
         self.image = pg.transform.scale(self.image, self.size)
+        self.original_image = self.image.copy()
         self.rect = self.image.get_rect() 
 
     def render(self, screen):
@@ -42,11 +44,11 @@ class GameObject:
     def _draw_rect(self, screen):
         pg.draw.rect(screen, (255, 255, 255), self.rect, 1)
 
-    def _apply_color(self):
-        """
-        Applies the specified color to the image using a blend mode.
-        """
+    def _apply_color(self, color):
         colored_image = pg.Surface(self.image.get_size(), flags=pg.SRCALPHA)
-        colored_image.fill(self.color)  # Wypełnienie kolorem
-
+        colored_image.fill(color)
+        self.image = self.original_image.copy()
         self.image.blit(colored_image, (0, 0), special_flags=pg.BLEND_RGBA_MULT)
+
+    def _reset_color(self):
+        self.image = self.original_image.copy()

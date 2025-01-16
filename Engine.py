@@ -5,7 +5,7 @@ import time
 
 from Common import *
 from InGameState import InGameState
-from BackgroundObject import *
+from BackgroundObject import BackgroundObject
 
 class Engine:
     _instance = None
@@ -32,8 +32,9 @@ class Engine:
         self.stars_sprites = []
         self.asteroids_sprites = []
 
-        self.__init_time_variables()
+        self.game_over = False
 
+        self.__init_time_variables()
         self.__load_images(self.stars_sprites, STARS_PATH)
         self.__load_images(self.asteroids_sprites, ASTEROIDS_PATH)
         self.__spawn_init_stars()
@@ -63,9 +64,17 @@ class Engine:
         return self.current_state.get_ship_position()
 
     
-    def change_state(self, state_id):
+    def change_game_state(self, state_id):
         self.current_state = self.all_states[state_id]
         self.current_state.__init__()
+
+
+    def set_game_over(self, game_over):
+        self.game_over = game_over
+
+    
+    def set_win_state(self, win):
+        self.win = win
 
 
     def __handle_events(self):

@@ -12,6 +12,7 @@ from BasicEnemy import BasicEnemy
 from BombEnemy import BombEnemy
 from TargetingEnemy import TargetingEnemy
 from Weapon import Weapon
+from PowerUp import PowerUp
 
 class InGameState (GameState):
     def __init__(self, ID):
@@ -23,6 +24,12 @@ class InGameState (GameState):
         self.enemy_types = [BasicEnemy, BombEnemy, TargetingEnemy]
         self.enemy_type_index = 0
         self.enemy_wave_index = 1
+        self.boss = None
+        self.enemies_defeated = 0
+        self.total_enemies_spawned = 0
+        self.total_enemies_to_spawn = 15
+
+        pg.font.init()
 
         self.__init_game_objects()
 
@@ -36,6 +43,8 @@ class InGameState (GameState):
         # remove dead game objects
         for go in self.game_objects:
             if go.alive == False:
+                if isinstance(go, Enemy) and go.death_by_time == True:
+                    self.enemies_defeated += 1
                 self.game_objects.remove(go)
 
         # check collisions
@@ -53,8 +62,9 @@ class InGameState (GameState):
         # render game objects
         for game_object in self.game_objects:
             game_object.render(screen)
+
         self.ship.render(screen)
-        self.__render_health_bars(screen)
+        self.__render_points(screen)
 
 
     def handle_events(self, events):
@@ -62,6 +72,12 @@ class InGameState (GameState):
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.__fire_bullet()
+
+    
+    def __render_points(self, screen):
+        font = pg.font.SysFont("Consolas", 20)
+        text = font.render("Defeated: " + str(self.enemies_defeated) + "/" + str(self.total_enemies_spawned), True, (255, 255, 255))
+        screen.blit(text, (10, 35))
 
 
     def __init_game_objects(self):
@@ -72,44 +88,13 @@ class InGameState (GameState):
         ship = Ship(sprite)
         self.ship = ship
 
-    
-    def __render_health_bars(self, screen):
-        # Dimensions of the health bar
-        player_bar_width = 200
-        player_bar_height = 20
-        enemy_bar_witdh = 50
-        enemy_bar_height = 10
-        player_bar_x = 10  # Padding from the left
-        player_bar_y = 10  # Padding from the top
-
-        # Draw health bar for Player
-        health_percentage = max(0, self.ship.health / self.ship.max_health)
-        current_bar_width = int(player_bar_width * health_percentage)
-
-        pg.draw.rect(screen, (100, 100, 100), (player_bar_x, player_bar_y, player_bar_width, player_bar_height))  # Background
-        pg.draw.rect(screen, (0, 255, 0), (player_bar_x, player_bar_y, current_bar_width, player_bar_height))  # Foreground
-        pg.draw.rect(screen, (255, 255, 255), (player_bar_x, player_bar_y, player_bar_width, player_bar_height), 2) # Border
-
-        # Draw health bar for Enemies
-        for go in self.game_objects:
-            if isinstance(go, Enemy):
-                health_percentage = max(0, go.health / go.max_health)
-                current_bar_width = int(enemy_bar_witdh * health_percentage)
-
-                enemy_bar_x = int(go.position.x - enemy_bar_witdh / 2)
-                enemy_bar_y = int(go.position.y - SHIP_SIZE / 2 - 10)
-
-                pg.draw.rect(screen, (100, 100, 100), (enemy_bar_x, enemy_bar_y, enemy_bar_witdh, enemy_bar_height))
-                pg.draw.rect(screen, (0, 255, 0), (enemy_bar_x, enemy_bar_y, current_bar_width, enemy_bar_height))
-                pg.draw.rect(screen, (255, 255, 255), (enemy_bar_x, enemy_bar_y, enemy_bar_witdh, enemy_bar_height), 2)
-
 
     def __fire_bullet(self):
         bullet_pos = self.ship.position
-        path = WEAPONS_PATH + "/bullet.png"
+        path = WEAPONS_PATH + "/rocket0.png"
 
         from Engine import Engine
-        sprite = Engine._instance.get_sprite(path)   
+        sprite = Engine._instance.get_sprite(path)  
         
         bullet = Bullet(pg.Vector2(bullet_pos.x + 5, bullet_pos.y - 10), sprite)
         bullet.set_ownership(True)
@@ -118,6 +103,8 @@ class InGameState (GameState):
 
 
     def __spawn_enemy(self):
+        self.total_enemies_spawned += 1
+
         x_position = random.randint(2*SHIP_SIZE, SCREEN_WIDTH - 2*SHIP_SIZE)
         
         enemy_type = EnemyTypes(self.enemy_type_index)
@@ -131,6 +118,11 @@ class InGameState (GameState):
         enemy_class = self.enemy_types[self.enemy_type_index]
         enemy = enemy_class(pg.Vector2(x_position, -SHIP_SIZE), sprite)
         self.game_objects.append(enemy)
+
+
+    def __spawn_boss(self):
+        #self.boss = Boss(pg.Vector2(SCREEN_WIDTH / 2, -SHIP_SIZE), self.boss_sprite)
+        pass
 
 
     def __check_rect_collision(self, go1, go2):
@@ -164,6 +156,15 @@ class InGameState (GameState):
                 else:
                     enemy_bullets.append(go)
 
+            if isinstance(go, PowerUp):
+                if self.__check_rect_collision(go, self.ship) == True:
+                    if go.type == PowerUpTypes.HEALTH:
+                        self.ship.update_health(HEALTH_POWER_UP_AMOUNT)
+                    elif go.type == PowerUpTypes.SHIELD:
+                        self.ship.activate_shield_defense(SHIELD_POWER_UP_TIME)
+
+                    self.game_objects.remove(go)
+
         # check ship collision with enemy bullets
         for eb in enemy_bullets:
             if self.__check_rect_collision(eb, self.ship) == True:
@@ -184,15 +185,53 @@ class InGameState (GameState):
                         pb.clear_health()
        
 
+    # TODO: change this to a random floats
     def __init_time_variables(self):
         self.last_enemy_time = time.time()
         self.new_enemy_time = random.randint(1, 3)
 
         self.last_wave_time = time.time()
-        self.new_wave_time = random.randint(3, 8)
+        self.new_wave_time = random.randint(5, 8)
+
+        self.last_power_up_time = time.time()
+        self.new_power_up_time = random.randint(4, 8)
 
 
     def __spawn_time_objects(self, current_time):
+        # check if it is time to spawn a new power up
+        if current_time - self.last_power_up_time >= self.new_power_up_time:
+            self.last_power_up_time = current_time
+            print("Spawning power up")
+            
+            pos = random.randint(0, 1)
+            if pos == 0:
+                direction = ObjectDirection.RIGHT
+                position_x = POWER_UP_SIZE
+            else:
+                direction = ObjectDirection.LEFT
+                position_x = SCREEN_WIDTH + POWER_UP_SIZE
+
+            position_y = random.randrange(SCREEN_HEIGHT/2, SCREEN_HEIGHT - 2*POWER_UP_SIZE, POWER_UP_SIZE)
+
+            type_rand = random.randint(0, 1)
+            if type_rand == 0:
+                type = PowerUpTypes.HEALTH
+                from Engine import Engine
+                sprite = Engine._instance.get_sprite(SPRITES_PATH + "/first-aid-kit.png")
+            else:
+                type = PowerUpTypes.SHIELD
+                from Engine import Engine
+                sprite = Engine._instance.get_sprite(SPRITES_PATH + "/shield.png")
+
+            power_up = PowerUp(pg.Vector2(position_x, position_y), sprite, direction, type)
+            self.game_objects.append(power_up)
+                
+
+        # check if it is time to spawn the boss
+        if self.total_enemies_spawned == self.total_enemies_to_spawn:
+            self.__spawn_boss()
+            return
+
         # check if it is time to spawn new wave of enemies
         if current_time - self.last_wave_time >= self.new_wave_time:
             self.enemy_wave_index += 1

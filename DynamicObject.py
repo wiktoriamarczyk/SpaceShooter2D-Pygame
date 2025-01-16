@@ -1,5 +1,5 @@
-from GameObject import *
 from Common import *
+from GameObject import GameObject
 
 class DynamicObject (GameObject):
     def __init__(self, position, sprite):
@@ -9,6 +9,7 @@ class DynamicObject (GameObject):
         self.speed = 100
         self.timer = 0
         self.alive_time = None
+        self.death_by_time = False
 
         # Explosion animation parameters
         from Engine import Engine
@@ -46,11 +47,7 @@ class DynamicObject (GameObject):
                     self.image = pg.transform.scale(self.image, self.size)
                     self.image.blit(self.image, (0, 0), special_flags=pg.BLEND_RGBA_MULT)
             return True
-
-
-    def set_explosion(self, is_exploding):
-        self.is_exploding = is_exploding
-
+        
 
     def update(self, delta_time):
         super().update(delta_time)
@@ -66,10 +63,12 @@ class DynamicObject (GameObject):
         # if lifetime has ended or health is 0, the object is dead or ready to explode
         if (((self.alive_time is not None and self.alive_time <= 0) or self.health <= 0) and self.is_explosive == False):
             self.alive = False
+            self.death_by_time = True
 
         elif (((self.alive_time is not None and self.alive_time <= 0) or self.health <= 0) and self.is_explosive == True):
             self.is_exploding = True
             self.update_explosion_logic(delta_time)
+            self.death_by_time = True
 
 
     def render(self, screen):

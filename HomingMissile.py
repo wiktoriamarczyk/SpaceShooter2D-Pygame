@@ -1,5 +1,7 @@
 import math
-from Weapon import *
+
+from Common import *
+from Weapon import Weapon
 
 class HomingMissile (Weapon):
     def __init__(self, position, sprite, target):
@@ -9,9 +11,9 @@ class HomingMissile (Weapon):
         self.size = pg.Vector2(BOMB_SIZE, BOMB_SIZE)
         self.position.x = position.x - self.size.x / 2
         self.position.y = position.y - self.size.y / 2
-        self.speed = 300
+        self.speed = 225
         self.alive_time = 3
-        self.dealing_damage = 15
+        self.dealing_damage = 7
         self.is_explosive = True
 
         # Precompute rotations

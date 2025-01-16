@@ -1,6 +1,5 @@
-import math
-from Enemy import *
-
+from Common import *
+from Enemy import Enemy
 
 class TargetingEnemy (Enemy):
     def __init__(self, position, sprite):
@@ -9,10 +8,13 @@ class TargetingEnemy (Enemy):
         bullet_sprite = Engine._instance.get_sprite(WEAPONS_PATH + "/torpedo0.png")
         
         super().__init__(position, sprite, bullet_sprite)
+
         self.speed = 250
-        self.shooting_timer = 1.5
+        self.shooting_timer = 2
         self.health = self.max_health = 50
 
+        self.init_health_bar()
+        
         self.initialize()
 
 

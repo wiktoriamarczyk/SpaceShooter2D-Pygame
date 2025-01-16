@@ -1,10 +1,10 @@
-from DynamicObject import *
+from DynamicObject import DynamicObject
 
 class Weapon(DynamicObject):
     def __init__(self, position, sprite):
         super().__init__(position, sprite)
 
-        self.dealing_damage = 5
+        self.dealing_damage = 10
         self.is_owned_by_player = False
         
 

@@ -1,6 +1,7 @@
-import math
 import random
-from Weapon import *
+
+from Common import *
+from Weapon import Weapon
 
 class Bomb (Weapon):
     def __init__(self, position, sprite, direction):
@@ -11,7 +12,7 @@ class Bomb (Weapon):
         self.position.y = position.y - self.size.y / 2
         self.speed = 200
         self.alive_time = 5
-        self.dealing_damage = 10
+        self.dealing_damage = 5
         self.is_explosive = True
 
         self.velocity = pg.Vector2(25, -100)
@@ -39,7 +40,7 @@ class Bomb (Weapon):
         direction = direction.normalize()
         self.velocity.x = direction.x * self.speed
 
-        # Aktualizacja pozycji na podstawie prędkości
+        # Update position based on velocity
         self.position += self.velocity * delta_time
 
 

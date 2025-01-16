@@ -13,6 +13,8 @@ class BombEnemy (Enemy):
         self.direction = ObjectDirection.LEFT
         self.shooting_timer = 0.75
         self.health = self.max_health = 40
+        
+        self.init_health_bar()
 
         self.initialize()
 
@@ -34,7 +36,6 @@ class BombEnemy (Enemy):
             self.direction = ObjectDirection.RIGHT
         elif horizontal_displacement < 0:
             self.direction = ObjectDirection.LEFT
-
 
         if super()._ready_to_shoot(delta_time):
             self._shoot()

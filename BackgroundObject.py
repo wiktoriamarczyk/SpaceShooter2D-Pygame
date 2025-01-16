@@ -1,4 +1,4 @@
-from DynamicObject import *
+from DynamicObject import DynamicObject
 
 class BackgroundObject (DynamicObject):
     def __init__(self, position, sprite, size, depth, color=None):
@@ -10,7 +10,7 @@ class BackgroundObject (DynamicObject):
 
         # color the image
         if self.color is not None:
-            self._apply_color()
+            self._apply_color(self.color)
 
         self.initialize()
 
