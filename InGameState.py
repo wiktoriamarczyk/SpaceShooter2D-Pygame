@@ -54,6 +54,7 @@ class InGameState (GameState):
         for game_object in self.game_objects:
             game_object.render(screen)
         self.ship.render(screen)
+        self.__render_health_bars(screen)
 
 
     def handle_events(self, events):
@@ -70,6 +71,37 @@ class InGameState (GameState):
         sprite = Engine._instance.get_sprite(path)     
         ship = Ship(sprite)
         self.ship = ship
+
+    
+    def __render_health_bars(self, screen):
+        # Dimensions of the health bar
+        player_bar_width = 200
+        player_bar_height = 20
+        enemy_bar_witdh = 50
+        enemy_bar_height = 10
+        player_bar_x = 10  # Padding from the left
+        player_bar_y = 10  # Padding from the top
+
+        # Draw health bar for Player
+        health_percentage = max(0, self.ship.health / self.ship.max_health)
+        current_bar_width = int(player_bar_width * health_percentage)
+
+        pg.draw.rect(screen, (100, 100, 100), (player_bar_x, player_bar_y, player_bar_width, player_bar_height))  # Background
+        pg.draw.rect(screen, (0, 255, 0), (player_bar_x, player_bar_y, current_bar_width, player_bar_height))  # Foreground
+        pg.draw.rect(screen, (255, 255, 255), (player_bar_x, player_bar_y, player_bar_width, player_bar_height), 2) # Border
+
+        # Draw health bar for Enemies
+        for go in self.game_objects:
+            if isinstance(go, Enemy):
+                health_percentage = max(0, go.health / go.max_health)
+                current_bar_width = int(enemy_bar_witdh * health_percentage)
+
+                enemy_bar_x = int(go.position.x - enemy_bar_witdh / 2)
+                enemy_bar_y = int(go.position.y - SHIP_SIZE / 2 - 10)
+
+                pg.draw.rect(screen, (100, 100, 100), (enemy_bar_x, enemy_bar_y, enemy_bar_witdh, enemy_bar_height))
+                pg.draw.rect(screen, (0, 255, 0), (enemy_bar_x, enemy_bar_y, current_bar_width, enemy_bar_height))
+                pg.draw.rect(screen, (255, 255, 255), (enemy_bar_x, enemy_bar_y, enemy_bar_witdh, enemy_bar_height), 2)
 
 
     def __fire_bullet(self):
@@ -135,7 +167,7 @@ class InGameState (GameState):
         # check ship collision with enemy bullets
         for eb in enemy_bullets:
             if self.__check_rect_collision(eb, self.ship) == True:
-                self.ship.update_health(eb.dealing_damage)
+                self.ship.update_health(-eb.dealing_damage)
                 eb.clear_health()
 
         for go in self.game_objects:
@@ -143,12 +175,12 @@ class InGameState (GameState):
             if isinstance(go, Enemy):
                 # check collision with player ship
                 if self.__check_rect_collision(go, self.ship) == True:
-                    self.ship.update_health(COLLISION_DEALT_DAMAGE)
-                    go.update_health(COLLISION_DEALT_DAMAGE)
+                    self.ship.update_health(-COLLISION_DEALT_DAMAGE)
+                    go.update_health(-COLLISION_DEALT_DAMAGE)
                 # check collision with player bullets
                 for pb in player_bullets:
                     if self.__check_rect_collision(go, pb) == True:
-                        go.update_health(pb.dealing_damage)
+                        go.update_health(-pb.dealing_damage)
                         pb.clear_health()
        
 
@@ -169,7 +201,6 @@ class InGameState (GameState):
             # if we have spawned all enemy waves, spawn random enemy wave
             if self.enemy_wave_index > len(self.enemy_types):
                 self.enemy_type_index = random.randint(0, len(self.enemy_types) - 1)
-                print("Random enemy spawned", self.enemy_type_index)
             else:
                 self.enemy_type_index = (self.enemy_type_index + 1) % len(self.enemy_types)
 

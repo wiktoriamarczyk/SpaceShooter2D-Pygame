@@ -11,7 +11,7 @@ class TargetingEnemy (Enemy):
         super().__init__(position, sprite, bullet_sprite)
         self.speed = 250
         self.shooting_timer = 1.5
-        self.health = 50
+        self.health = self.max_health = 50
 
         self.initialize()
 

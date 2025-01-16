@@ -6,8 +6,8 @@ class Ship (GameObject):
 
         self.size = pg.Vector2(SHIP_SIZE, SHIP_SIZE)
         self.position = pg.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-        self.speed = 300
-        self.health = 1000
+        self.speed = 500
+        self.health = self.max_health = 1000
         self.dealing_damage = 25
 
         self.initialize()
@@ -16,7 +16,21 @@ class Ship (GameObject):
     def update(self, delta_time):
         super().update(delta_time)
 
+        if self.health <= 0:
+
+            # rotate the image around
+            self.image = pg.transform.rotate(self.image, 90)
+            self.image = pg.transform.scale(self.image, self.size)
+
+            self.position.y += self.speed * delta_time
+            if self.position.y < 0:
+                self.alive = False
+                print("Game Over")
+            
+            return
+
         self.__handle_movement(delta_time)
+        
 
 
     def render(self, screen):

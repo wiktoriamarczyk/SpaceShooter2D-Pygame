@@ -6,7 +6,8 @@ class GameObject:
         self.position = pg.Vector2(0, 0)
         self.speed = 0
         self.image = sprite if sprite else None
-        self.health = 30
+        self.health = self.max_health = 30
+        self.max_health = 30
         self.alive = True
         self.rect = None
 
@@ -29,8 +30,8 @@ class GameObject:
         return self.rect
     
     def update_health(self, damage):
-        if self.health > 0:
-            self.health -= damage
+        self.health += damage
+        self.health = max(0, min(self.health, self.max_health))
 
     def clear_health(self):
         self.health = 0

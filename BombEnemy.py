@@ -12,7 +12,7 @@ class BombEnemy (Enemy):
         self.start_position = position
         self.direction = ObjectDirection.LEFT
         self.shooting_timer = 0.75
-        self.health = 40
+        self.health = self.max_health = 40
 
         self.initialize()
 
