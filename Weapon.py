@@ -5,6 +5,7 @@ class Weapon(DynamicObject):
         super().__init__(position, sprite)
 
         self.dealing_damage = 10
+        self.dead_by_collision = True
         self.is_owned_by_player = False
         
 

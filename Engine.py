@@ -32,7 +32,7 @@ class Engine:
         self.stars_sprites = []
         self.asteroids_sprites = []
 
-        self.game_over = False
+        self.game_over = None
 
         self.__init_time_variables()
         self.__load_images(self.stars_sprites, STARS_PATH)
@@ -71,6 +71,7 @@ class Engine:
 
     def set_game_over(self, game_over):
         self.game_over = game_over
+        # victory or defeat state
 
     
     def set_win_state(self, win):

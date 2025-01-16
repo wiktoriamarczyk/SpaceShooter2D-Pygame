@@ -1,5 +1,7 @@
 import math
-from Enemy import *
+
+from Common import *
+from Enemy import Enemy
 
 class BombEnemy (Enemy):
     def __init__(self, position, sprite):
@@ -13,7 +15,7 @@ class BombEnemy (Enemy):
         self.direction = ObjectDirection.LEFT
         self.shooting_timer = 0.75
         self.health = self.max_health = 40
-        
+
         self.init_health_bar()
 
         self.initialize()

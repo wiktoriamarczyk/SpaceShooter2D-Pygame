@@ -19,6 +19,7 @@ class Ship (GameObject):
 
     def update(self, delta_time):
         super().update(delta_time)
+        print(self.position)
 
         if self.shield_timer > 0:
             self._apply_color(self.shield_color)
@@ -36,7 +37,7 @@ class Ship (GameObject):
                 self.alive = False
                 
                 from Engine import Engine
-                Engine._instance.set_game_over(True)
+                Engine._instance.set_game_over(False)
 
             return
 

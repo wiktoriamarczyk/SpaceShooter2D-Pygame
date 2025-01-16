@@ -13,6 +13,8 @@ from BombEnemy import BombEnemy
 from TargetingEnemy import TargetingEnemy
 from Weapon import Weapon
 from PowerUp import PowerUp
+from Boss import Boss
+from Ray import Ray
 
 class InGameState (GameState):
     def __init__(self, ID):
@@ -27,7 +29,7 @@ class InGameState (GameState):
         self.boss = None
         self.enemies_defeated = 0
         self.total_enemies_spawned = 0
-        self.total_enemies_to_spawn = 15
+        self.total_enemies_to_spawn = 1
 
         pg.font.init()
 
@@ -76,7 +78,7 @@ class InGameState (GameState):
     
     def __render_points(self, screen):
         font = pg.font.SysFont("Consolas", 20)
-        text = font.render("Defeated: " + str(self.enemies_defeated) + "/" + str(self.total_enemies_spawned), True, (255, 255, 255))
+        text = font.render("Defeated: " + str(self.enemies_defeated) + "/" + str(self.total_enemies_to_spawn), True, (255, 255, 255))
         screen.blit(text, (10, 35))
 
 
@@ -121,8 +123,10 @@ class InGameState (GameState):
 
 
     def __spawn_boss(self):
-        #self.boss = Boss(pg.Vector2(SCREEN_WIDTH / 2, -SHIP_SIZE), self.boss_sprite)
-        pass
+        from Engine import Engine
+        boss_sprite = Engine._instance.get_sprite(UNITS_PATH + "/boss.png")
+        self.boss = Boss(pg.Vector2(SCREEN_WIDTH / 2, -BOSS_SIZE), boss_sprite)
+        self.game_objects.append(self.boss)
 
 
     def __check_rect_collision(self, go1, go2):
@@ -169,7 +173,8 @@ class InGameState (GameState):
         for eb in enemy_bullets:
             if self.__check_rect_collision(eb, self.ship) == True:
                 self.ship.update_health(-eb.dealing_damage)
-                eb.clear_health()
+                if eb.dead_by_collision == True:
+                    eb.clear_health()
 
         for go in self.game_objects:
             # for each enemy
@@ -201,7 +206,6 @@ class InGameState (GameState):
         # check if it is time to spawn a new power up
         if current_time - self.last_power_up_time >= self.new_power_up_time:
             self.last_power_up_time = current_time
-            print("Spawning power up")
             
             pos = random.randint(0, 1)
             if pos == 0:
@@ -211,7 +215,7 @@ class InGameState (GameState):
                 direction = ObjectDirection.LEFT
                 position_x = SCREEN_WIDTH + POWER_UP_SIZE
 
-            position_y = random.randrange(SCREEN_HEIGHT/2, SCREEN_HEIGHT - 2*POWER_UP_SIZE, POWER_UP_SIZE)
+            position_y = random.randrange(2*POWER_UP_SIZE, 8*POWER_UP_SIZE, 10)
 
             type_rand = random.randint(0, 1)
             if type_rand == 0:
@@ -228,8 +232,11 @@ class InGameState (GameState):
                 
 
         # check if it is time to spawn the boss
-        if self.total_enemies_spawned == self.total_enemies_to_spawn:
+        if self.total_enemies_spawned == self.total_enemies_to_spawn and self.boss is None:
             self.__spawn_boss()
+            return
+        
+        if self.total_enemies_spawned == self.total_enemies_to_spawn:
             return
 
         # check if it is time to spawn new wave of enemies

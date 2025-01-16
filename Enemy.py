@@ -3,7 +3,7 @@ from DynamicObject import DynamicObject
 from HealthBar import HealthBar
 
 class Enemy (DynamicObject):
-    def __init__(self, position, sprite, bullet_sprite):
+    def __init__(self, position, sprite, bullet_sprite, rotate = 180):
         super().__init__(position, sprite)
 
         self.bullet_sprite = bullet_sprite
@@ -15,11 +15,11 @@ class Enemy (DynamicObject):
 
         # rotate the image
         self.image = pg.transform.scale(self.image, self.size)
-        self.image = pg.transform.rotate(self.image, 180)
+        self.image = pg.transform.rotate(self.image, rotate)
 
 
-    def init_health_bar(self):
-        self.health_bar = HealthBar(50, 10, self.max_health)
+    def init_health_bar(self, width = 50, height = 10):
+        self.health_bar = HealthBar(width, height, self.max_health)
 
 
     def update(self, delta_time):
@@ -30,7 +30,8 @@ class Enemy (DynamicObject):
         super().render(screen)
         
         enemy_bar_x = int(self.position.x - self.health_bar.width / 2)
-        enemy_bar_y = int(self.position.y - SHIP_SIZE / 2 - 10)
+        offset_y = 10
+        enemy_bar_y = int(self.position.y - self.size.y / 2 - offset_y)
         self.health_bar.draw(screen, pg.Vector2(enemy_bar_x, enemy_bar_y), self.health)
 
 
