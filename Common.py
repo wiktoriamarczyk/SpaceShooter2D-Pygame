@@ -1,5 +1,4 @@
 import pygame as pg
-import sys
 from enum import Enum
 
 DATA_PATH = 'data'
@@ -46,6 +45,12 @@ class ObjectDirection(Enum) :
     DOWN = 2
     LEFT = 3
     RIGHT = 4
+
+class GameStateID(Enum) :
+    UNKNOWN = 0
+    MAIN_MENU = 1
+    GAME = 2
+    GAME_OVER = 3
 
 def are_floats_equal(a: float, b: float, tolerance: float = 1e-3) -> bool:
     return abs(a - b) <= tolerance

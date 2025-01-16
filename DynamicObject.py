@@ -65,7 +65,6 @@ class DynamicObject (GameObject):
 
         # if lifetime has ended or health is 0, the object is dead or ready to explode
         if (((self.alive_time is not None and self.alive_time <= 0) or self.health <= 0) and self.is_explosive == False):
-            print("Object is dead ", __name__)
             self.alive = False
 
         elif (((self.alive_time is not None and self.alive_time <= 0) or self.health <= 0) and self.is_explosive == True):
