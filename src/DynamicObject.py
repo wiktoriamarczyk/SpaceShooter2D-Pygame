@@ -29,7 +29,7 @@ class DynamicObject (GameObject):
 
     def update_explosion_logic(self, delta_time):
         if self.is_exploding == True:
-            self.image = self.explosion_frames[self.explosion_frame_index]
+            self.image = self.explosion_frames[min(self.explosion_frame_index, len(self.explosion_frames) - 1)]
             self.image = pg.transform.scale(self.image, self.size)
             self.image.blit(self.image, (0, 0), special_flags=pg.BLEND_RGBA_MULT)
             self.explosion_timer += delta_time

@@ -74,7 +74,8 @@ class Engine:
 
     
     def change_game_state(self, state_id):
-        self.pause = False
+        if state_id is not GameStateID.GAME_OVER:
+            self.__restart_game()
         self.current_state = self.all_states[state_id]
         self.current_state.__init__(state_id)
 
@@ -94,6 +95,12 @@ class Engine:
 
     def get_points(self):
         return self.points
+    
+
+    def __restart_game(self):
+        self.pause = False
+        self.points = 0
+        self.game_over = None
 
 
     def __draw_pause(self):

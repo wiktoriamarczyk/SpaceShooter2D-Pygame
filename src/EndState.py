@@ -9,6 +9,7 @@ class EndState (GameState):
 
         from Engine import Engine
         game_over = Engine._instance.get_end_state()
+        self.win = not game_over
         self.title = "YOU WIN!" if not game_over else "GAME OVER"
         self.title_color = (14, 210, 27) if not game_over else (210, 14, 14)
 
@@ -38,7 +39,11 @@ class EndState (GameState):
         from Engine import Engine
         points = Engine._instance.get_points()
         points_font = pg.font.Font(None, 40)
-        points_text = points_font.render("Enemies defeated: " + str(points), True, COLOR_WHITE)
+        points_text = points_font.render(
+            "Enemies defeated: " + str(points) + (" + boss!" if self.win else ""), 
+            True, 
+            COLOR_WHITE
+        )
         points_text_rect = points_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
         screen.blit(points_text, points_text_rect)
 

@@ -30,8 +30,8 @@ class InGameState (GameState):
         self.total_enemies_spawned = 0
         self.total_enemies_to_spawn = 15
 
-        self.powerup_health_path = SPRITES_PATH + "/first-aid-kit.png"
-        self.powerup_shield_path = SPRITES_PATH + "/shield.png"
+        self.powerup_health_path = POWER_UPS_PATH + "/first-aid-kit.png"
+        self.powerup_shield_path = POWER_UPS_PATH + "/shield.png"
         self.bullet_path = WEAPONS_PATH + "/rocket0.png"
         self.boss_path = UNITS_PATH + "/boss.png"
         self.ship_path = UNITS_PATH + "/ship.png"
