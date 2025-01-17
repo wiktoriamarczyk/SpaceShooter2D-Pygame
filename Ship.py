@@ -19,7 +19,6 @@ class Ship (GameObject):
 
     def update(self, delta_time):
         super().update(delta_time)
-        print(self.position)
 
         if self.shield_timer > 0:
             self._apply_color(self.shield_color)

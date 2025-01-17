@@ -15,10 +15,12 @@ from Weapon import Weapon
 from PowerUp import PowerUp
 from Boss import Boss
 from Ray import Ray
+from Button import Button
 
 class InGameState (GameState):
     def __init__(self, ID):
         super().__init__(ID)
+        self.next_state = GameStateID.GAME_OVER
 
         # units
         self.game_objects = []
@@ -29,7 +31,7 @@ class InGameState (GameState):
         self.boss = None
         self.enemies_defeated = 0
         self.total_enemies_spawned = 0
-        self.total_enemies_to_spawn = 1
+        self.total_enemies_to_spawn = 15
 
         pg.font.init()
 

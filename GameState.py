@@ -3,6 +3,7 @@ from Common import *
 class GameState:
     def __init__(self, ID):
         self.ID = ID
+        self.next_state = GameStateID.UNKNOWN
 
     def update(self):
         pass
@@ -17,5 +18,4 @@ class GameState:
         return self.ID
     
     def get_next_state_ID(self):
-        return GameStateID.UNKNOWN
-
+        return self.next_state

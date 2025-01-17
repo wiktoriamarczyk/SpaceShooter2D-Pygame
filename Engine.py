@@ -6,6 +6,8 @@ import time
 from Common import *
 from InGameState import InGameState
 from BackgroundObject import BackgroundObject
+from MainMenuState import MainMenuState
+from EndState import EndState
 
 class Engine:
     _instance = None
@@ -33,14 +35,17 @@ class Engine:
         self.asteroids_sprites = []
 
         self.game_over = None
+        self.pause = False
 
         self.__init_time_variables()
         self.__load_images(self.stars_sprites, STARS_PATH)
         self.__load_images(self.asteroids_sprites, ASTEROIDS_PATH)
         self.__spawn_init_stars()
         
-        self.all_states = { GameStateID.GAME: InGameState(GameStateID.GAME) }
-        self.current_state = self.all_states[GameStateID.GAME]
+        self.all_states = {GameStateID.MAIN_MENU: MainMenuState(GameStateID.MAIN_MENU),
+                               GameStateID.GAME: InGameState(GameStateID.GAME),
+                               GameStateID.GAME_OVER: EndState(GameStateID.GAME_OVER)}
+        self.current_state = self.all_states[GameStateID.MAIN_MENU]
 
 
     def run(self):
@@ -78,20 +83,40 @@ class Engine:
         self.win = win
 
 
+    def draw_pause(self):
+        pg.font.init()
+        font = pg.font.Font(None, 36)
+        text = font.render("PAUSE", True, (255, 255, 255))
+        pg.draw.rect(self.screen, (32, 32, 32), (SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 - 50, 200, 100))    
+        text_rect = text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        self.screen.blit(text, text_rect)
+        pg.display.flip()
+
+
     def __handle_events(self):
         events = pg.event.get()
-        self.current_state.handle_events(events)
+        if self.pause == False:
+            self.current_state.handle_events(events)
         for event in events:
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
+            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE and self.current_state.ID == GameStateID.GAME:
+                self.pause = not self.pause
+                # next_state_ID = self.current_state.get_next_state_ID()
+                # self.current_state = self.all_states[next_state_ID]
 
 
     def __render(self):
         self.current_state.render(self.screen)
+        if self.pause:
+            self.draw_pause()
 
 
     def __update(self, delta_time):
+        if self.pause == True:
+            return
+        
         current_time = time.time()
         self.__spawn_time_objects(current_time)
         self.current_state.update(delta_time)
@@ -113,8 +138,9 @@ class Engine:
 
 
     def __scroll_background(self):
-        # Scroll the background horizontally
-        self.scroll_y += 1
+        if self.pause == False and self.current_state.ID is not GameStateID.MAIN_MENU:
+            # Scroll the background horizontally
+            self.scroll_y += 1
         
         # Draw the background twice to create seamless scrolling effect
         self.screen.blit(self.background, (self.scroll_x, self.scroll_y))
