@@ -14,15 +14,12 @@ from TargetingEnemy import TargetingEnemy
 from Weapon import Weapon
 from PowerUp import PowerUp
 from Boss import Boss
-from Ray import Ray
-from Button import Button
 
 class InGameState (GameState):
     def __init__(self, ID):
         super().__init__(ID)
         self.next_state = GameStateID.GAME_OVER
 
-        # units
         self.game_objects = []
         self.ship = None
         self.enemy_types = [BasicEnemy, BombEnemy, TargetingEnemy]
@@ -33,11 +30,14 @@ class InGameState (GameState):
         self.total_enemies_spawned = 0
         self.total_enemies_to_spawn = 15
 
+        self.powerup_health_path = SPRITES_PATH + "/first-aid-kit.png"
+        self.powerup_shield_path = SPRITES_PATH + "/shield.png"
+        self.bullet_path = WEAPONS_PATH + "/rocket0.png"
+        self.boss_path = UNITS_PATH + "/boss.png"
+        self.ship_path = UNITS_PATH + "/ship.png"
+
         pg.font.init()
-
         self.__init_game_objects()
-
-        # time variables
         self.__init_time_variables()
 
 
@@ -49,11 +49,11 @@ class InGameState (GameState):
             if go.alive == False:
                 if isinstance(go, Enemy) and go.death_by_time == True:
                     self.enemies_defeated += 1
+                    from Engine import Engine
+                    Engine._instance.add_points(1)
                 self.game_objects.remove(go)
 
-        # check collisions
         self.__check_collisions()
-
         self.__spawn_time_objects(current_time)
 
         # update game objects
@@ -63,7 +63,6 @@ class InGameState (GameState):
 
 
     def render(self, screen):
-        # render game objects
         for game_object in self.game_objects:
             game_object.render(screen)
 
@@ -77,28 +76,33 @@ class InGameState (GameState):
                 if event.key == pg.K_SPACE:
                     self.__fire_bullet()
 
+
+    def add_object(self, game_object):
+        self.game_objects.append(game_object)
     
+
+    def get_ship_position(self):
+        return self.ship.position
+    
+
     def __render_points(self, screen):
         font = pg.font.SysFont("Consolas", 20)
-        text = font.render("Defeated: " + str(self.enemies_defeated) + "/" + str(self.total_enemies_to_spawn), True, (255, 255, 255))
+        text = font.render("Defeated: " + str(self.enemies_defeated) + "/" + str(self.total_enemies_to_spawn), True, COLOR_WHITE)
         screen.blit(text, (10, 35))
 
 
     def __init_game_objects(self):
-        path = UNITS_PATH + "/ship.png"
-
         from Engine import Engine
-        sprite = Engine._instance.get_sprite(path)     
+        sprite = Engine._instance.get_sprite(self.ship_path)     
         ship = Ship(sprite)
         self.ship = ship
 
 
     def __fire_bullet(self):
         bullet_pos = self.ship.position
-        path = WEAPONS_PATH + "/rocket0.png"
 
         from Engine import Engine
-        sprite = Engine._instance.get_sprite(path)  
+        sprite = Engine._instance.get_sprite(self.bullet_path)  
         
         bullet = Bullet(pg.Vector2(bullet_pos.x + 5, bullet_pos.y - 10), sprite)
         bullet.set_ownership(True)
@@ -126,7 +130,7 @@ class InGameState (GameState):
 
     def __spawn_boss(self):
         from Engine import Engine
-        boss_sprite = Engine._instance.get_sprite(UNITS_PATH + "/boss.png")
+        boss_sprite = Engine._instance.get_sprite(self.boss_path)
         self.boss = Boss(pg.Vector2(SCREEN_WIDTH / 2, -BOSS_SIZE), boss_sprite)
         self.game_objects.append(self.boss)
 
@@ -136,18 +140,6 @@ class InGameState (GameState):
             return go1.get_rect().colliderect(go2.get_rect())
         return False
 
-
-    def get_next_state_ID(self):
-        return GameStateID.MAIN_MENU
-
-
-    def add_object(self, game_object):
-        self.game_objects.append(game_object)
-    
-
-    def get_ship_position(self):
-        return self.ship.position
-    
 
     # TO FIX: Make sure to check the collision only once
     def __check_collisions(self):
@@ -223,11 +215,11 @@ class InGameState (GameState):
             if type_rand == 0:
                 type = PowerUpTypes.HEALTH
                 from Engine import Engine
-                sprite = Engine._instance.get_sprite(SPRITES_PATH + "/first-aid-kit.png")
+                sprite = Engine._instance.get_sprite(self.powerup_health_path)
             else:
                 type = PowerUpTypes.SHIELD
                 from Engine import Engine
-                sprite = Engine._instance.get_sprite(SPRITES_PATH + "/shield.png")
+                sprite = Engine._instance.get_sprite(self.powerup_shield_path)
 
             power_up = PowerUp(pg.Vector2(position_x, position_y), sprite, direction, type)
             self.game_objects.append(power_up)

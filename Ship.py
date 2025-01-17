@@ -32,11 +32,11 @@ class Ship (GameObject):
             self.image = pg.transform.scale(self.image, self.size)
 
             self.position.y += self.speed * delta_time
-            if self.position.y < 0:
+            if self.position.y > SCREEN_HEIGHT + SHIP_SIZE / 2:
                 self.alive = False
                 
                 from Engine import Engine
-                Engine._instance.set_game_over(False)
+                Engine._instance.set_game_over(True)
 
             return
 

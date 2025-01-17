@@ -22,7 +22,7 @@ class Boss (Enemy):
 
         if self.is_exploding == True:
             from Engine import Engine
-            Engine._instance.set_game_over(True)
+            Engine._instance.set_game_over(False)
 
         if self.position.y < self.size.y:
             self.position.y += self.speed * delta_time

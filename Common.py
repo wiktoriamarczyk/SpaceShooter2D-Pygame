@@ -27,6 +27,10 @@ COLLISION_DEALT_DAMAGE = 2
 HEALTH_POWER_UP_AMOUNT = 250
 SHIELD_POWER_UP_TIME = 3
 
+COLOR_WHITE = (255, 255, 255)
+COLOR_BLACK = (0, 0, 0)
+RECT_DEFAULT_COLOR = (32, 32, 32)
+
 class EnemySprites(Enum) :
     BasicEnemy = UNITS_PATH + "/bullet-ship.png"
     BombEnemy = UNITS_PATH + "/bomb-ship.png"

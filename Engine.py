@@ -8,6 +8,7 @@ from InGameState import InGameState
 from BackgroundObject import BackgroundObject
 from MainMenuState import MainMenuState
 from EndState import EndState
+from Button import Button
 
 class Engine:
     _instance = None
@@ -36,6 +37,7 @@ class Engine:
 
         self.game_over = None
         self.pause = False
+        self.points = 0
 
         self.__init_time_variables()
         self.__load_images(self.stars_sprites, STARS_PATH)
@@ -46,6 +48,8 @@ class Engine:
                                GameStateID.GAME: InGameState(GameStateID.GAME),
                                GameStateID.GAME_OVER: EndState(GameStateID.GAME_OVER)}
         self.current_state = self.all_states[GameStateID.MAIN_MENU]
+
+        self.return_to_menu_bttn = None
 
 
     def run(self):
@@ -70,27 +74,51 @@ class Engine:
 
     
     def change_game_state(self, state_id):
+        self.pause = False
         self.current_state = self.all_states[state_id]
-        self.current_state.__init__()
+        self.current_state.__init__(state_id)
 
 
     def set_game_over(self, game_over):
         self.game_over = game_over
-        # victory or defeat state
+        self.change_game_state(GameStateID.GAME_OVER)
 
+
+    def get_end_state(self):
+        return self.game_over
     
-    def set_win_state(self, win):
-        self.win = win
+
+    def add_points(self, points):
+        self.points += points
 
 
-    def draw_pause(self):
+    def get_points(self):
+        return self.points
+
+
+    def __draw_pause(self):
+        rect_size = pg.Vector2(400, 200)
+        bttn_size = pg.Vector2(100, 50)
+        offset_x = 200
+        offset_y = 50
+
+        # draw pause text
         pg.font.init()
-        font = pg.font.Font(None, 36)
-        text = font.render("PAUSE", True, (255, 255, 255))
-        pg.draw.rect(self.screen, (32, 32, 32), (SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 - 50, 200, 100))    
+        font = pg.font.Font(None, 80)
+        text = font.render("PAUSE", True, COLOR_WHITE)
+        pg.draw.rect(self.screen, RECT_DEFAULT_COLOR, (SCREEN_WIDTH / 2 - offset_x, SCREEN_HEIGHT / 2 - offset_y, rect_size.x, rect_size.y))    
         text_rect = text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
         self.screen.blit(text, text_rect)
-        pg.display.flip()
+
+        # draw border
+        pg.draw.rect(self.screen, COLOR_WHITE, (SCREEN_WIDTH / 2 - offset_x, SCREEN_HEIGHT / 2 - offset_y, rect_size.x, rect_size.y), 3)
+
+        # draw button
+        bttn_pos = pg.Vector2(SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2 + 75)
+        self.return_to_menu_bttn = Button(bttn_pos, pg.Vector2(bttn_size), "MENU", lambda: self.change_game_state(GameStateID.MAIN_MENU))
+        self.return_to_menu_bttn.draw(self.screen)
+
+        self.screen.blit(text, text_rect)
 
 
     def __handle_events(self):
@@ -103,17 +131,20 @@ class Engine:
                 sys.exit()
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE and self.current_state.ID == GameStateID.GAME:
                 self.pause = not self.pause
-                # next_state_ID = self.current_state.get_next_state_ID()
-                # self.current_state = self.all_states[next_state_ID]
+            if event.type == pg.KEYDOWN and event.key == pg.K_p:
+                self.current_state.ship.update_health(-100)
 
 
     def __render(self):
         self.current_state.render(self.screen)
         if self.pause:
-            self.draw_pause()
+            self.__draw_pause()
 
 
-    def __update(self, delta_time):
+    def __update(self, delta_time):          
+        if self.return_to_menu_bttn is not None and self.pause == True:
+            self.return_to_menu_bttn.update()
+
         if self.pause == True:
             return
         
