@@ -86,7 +86,7 @@ class InGameState (GameState):
     
 
     def __render_points(self, screen):
-        font = pg.font.SysFont("Consolas", 20)
+        font = pg.font.SysFont(DEFAULT_FONT_NAME, 20)
         text = font.render("Defeated: " + str(self.enemies_defeated) + "/" + str(self.total_enemies_to_spawn), True, COLOR_WHITE)
         screen.blit(text, (10, 35))
 

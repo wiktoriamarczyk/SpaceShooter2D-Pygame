@@ -1,7 +1,7 @@
 from Common import *
 
 class Button:
-    def __init__(self, position, size, text, action, font_size=20):
+    def __init__(self, position, size, text, action, font_size=15):
         self.position = position
         self.size = size
         self.text = text
@@ -14,8 +14,8 @@ class Button:
         self.border_color = (255, 255, 255)
 
         pg.font.init()
-        self.font = pg.font.Font(None, self.font_size)
-        self.text_surface = self.font.render(self.text, True, self.font_color)
+        font = pg.font.SysFont(DEFAULT_FONT_NAME, self.font_size)
+        self.text_surface = font.render(self.text, True, self.font_color)
         self.text_rect = self.text_surface.get_rect(center=(self.position.x + self.size.x / 2, self.position.y + self.size.y / 2))
 
         self.hovered = False

@@ -111,7 +111,7 @@ class Engine:
 
         # draw pause text
         pg.font.init()
-        font = pg.font.Font(None, 80)
+        font = pg.font.SysFont(DEFAULT_FONT_NAME, 70)
         text = font.render("PAUSE", True, COLOR_WHITE)
         pg.draw.rect(self.screen, RECT_DEFAULT_COLOR, (SCREEN_WIDTH / 2 - offset_x, SCREEN_HEIGHT / 2 - offset_y, rect_size.x, rect_size.y))    
         text_rect = text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
@@ -138,7 +138,7 @@ class Engine:
                 sys.exit()
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE and self.current_state.ID == GameStateID.GAME:
                 self.pause = not self.pause
-            if event.type == pg.KEYDOWN and event.key == pg.K_p:
+            if event.type == pg.KEYDOWN and event.key == pg.K_p and self.current_state.ID == GameStateID.GAME:
                 self.current_state.ship.update_health(-100)
 
 

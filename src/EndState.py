@@ -19,7 +19,7 @@ class EndState (GameState):
 
         from Engine import Engine
         func = lambda: Engine._instance.change_game_state(GameStateID.MAIN_MENU)
-        self.menu_bttn = Button(bttn_pos, pg.Vector2(150, 75), "MENU", func, 40)
+        self.menu_bttn = Button(bttn_pos, pg.Vector2(150, 75), "MENU", func, 30)
 
 
     def update(self, delta_time):
@@ -30,7 +30,7 @@ class EndState (GameState):
         offset_y = 100
 
         # draw title
-        title_font = pg.font.Font(None, 80)
+        title_font = pg.font.SysFont(DEFAULT_FONT_NAME, 80)
         title_text = title_font.render(self.title, True, self.title_color)
         title_text_rect = title_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - offset_y))
         screen.blit(title_text, title_text_rect)
@@ -38,7 +38,7 @@ class EndState (GameState):
         # draw points count
         from Engine import Engine
         points = Engine._instance.get_points()
-        points_font = pg.font.Font(None, 40)
+        points_font = pg.font.SysFont(DEFAULT_FONT_NAME, 25)
         points_text = points_font.render(
             "Enemies defeated: " + str(points) + (" + boss!" if self.win else ""), 
             True, 

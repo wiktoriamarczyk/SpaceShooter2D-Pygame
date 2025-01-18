@@ -18,7 +18,7 @@ class MainMenuState (GameState):
 
         from Engine import Engine
         func = lambda: Engine._instance.change_game_state(GameStateID.GAME)
-        self.play_bttn = Button(bttn_pos, pg.Vector2(150, 75), "PLAY", func, 40)
+        self.play_bttn = Button(bttn_pos, pg.Vector2(150, 75), "PLAY", func, 30)
 
 
     def update(self, delta_time):
@@ -33,12 +33,12 @@ class MainMenuState (GameState):
     def render(self, screen):
         offset_y = 100
 
-        title_font = pg.font.Font(None, 80)
+        title_font = pg.font.SysFont(DEFAULT_FONT_NAME, 70)
         title_text = title_font.render(self.title, True, self.bttn_color)
         title_text_rect = title_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - offset_y))
         screen.blit(title_text, title_text_rect)
 
-        author_font = pg.font.Font(None, 20)
+        author_font = pg.font.SysFont(DEFAULT_FONT_NAME, 15)
         author_text = author_font.render("Author: Wiktoria Marczyk", True, COLOR_WHITE)
         author_text_rect = author_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT - offset_y))
         screen.blit(author_text, author_text_rect)
