@@ -5,6 +5,14 @@ from Weapon import Weapon
 
 class HomingMissile (Weapon):
     def __init__(self, position, sprite, target):
+        """
+        Initializes the homing missile object.
+
+        Args:
+            position (Vector2): The position of the object.
+            sprite (pg.Surface): The sprite of the object.
+            target (Vector2): The target position of the missile.
+        """
         super().__init__(position, sprite)
 
         self.target = target
@@ -29,6 +37,15 @@ class HomingMissile (Weapon):
 
 
     def get_rotated_image(self, angle):
+        """
+        Returns the rotated image corresponding to the given angle.
+
+        Args:
+            angle (float): The angle in degrees.
+
+        Returns:
+            pygame.Surface: The rotated image.
+        """
         index = int(angle / 5) % len(self.rotated_images)
         return self.rotated_images[index]
 

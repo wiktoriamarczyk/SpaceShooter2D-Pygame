@@ -78,20 +78,39 @@ class InGameState (GameState):
 
 
     def add_object(self, game_object):
+        """
+        Add a game object to the game state.
+
+        Args:
+            game_object (GameObject): The game object to be added.
+        """
         self.game_objects.append(game_object)
     
 
     def get_ship_position(self):
+        """
+        Get the ship position.
+
+        Returns:
+            pg.Vector2: The ship position.
+        """
         return self.ship.position
     
 
     def __render_points(self, screen):
+        """
+        Render the points on the screen.
+
+        Args:
+            screen (pg.Surface): The screen to render the points on.
+        """
         font = pg.font.SysFont(DEFAULT_FONT_NAME, 20)
         text = font.render("Defeated: " + str(self.enemies_defeated) + "/" + str(self.total_enemies_to_spawn), True, COLOR_WHITE)
         screen.blit(text, (10, 35))
 
 
     def __init_game_objects(self):
+        """ Initialize the game objects. """
         from Engine import Engine
         sprite = Engine._instance.get_sprite(self.ship_path)     
         ship = Ship(sprite)
@@ -99,6 +118,7 @@ class InGameState (GameState):
 
 
     def __fire_bullet(self):
+        """ Fire a bullet from the ship. """
         bullet_pos = self.ship.position
 
         from Engine import Engine
@@ -111,6 +131,7 @@ class InGameState (GameState):
 
 
     def __spawn_enemy(self):
+        """ Spawn an enemy on the screen. """
         self.total_enemies_spawned += 1
 
         x_position = random.randint(2*SHIP_SIZE, SCREEN_WIDTH - 2*SHIP_SIZE)
@@ -129,6 +150,7 @@ class InGameState (GameState):
 
 
     def __spawn_boss(self):
+        """ Spawn boss on the screen. """
         from Engine import Engine
         boss_sprite = Engine._instance.get_sprite(self.boss_path)
         self.boss = Boss(pg.Vector2(SCREEN_WIDTH / 2, -BOSS_SIZE), boss_sprite)
@@ -136,14 +158,28 @@ class InGameState (GameState):
 
 
     def __check_rect_collision(self, go1, go2):
+        """
+        Check if two game objects have collided.
+
+        Args:
+            go1 (GameObject): The first game object.
+            go2 (GameObject): The second game object.
+
+        Returns:
+            bool: True if the two game objects have collided, False otherwise.
+        """
         if isinstance(go1, GameObject) and isinstance(go2, GameObject):
             return go1.get_rect().colliderect(go2.get_rect())
         return False
 
 
-    # TO FIX: Make sure to check the collision only once
     def __check_collisions(self):
+        """
+        Check the collisions between the game objects.
 
+        Returns:
+            bool: True if the two game objects have collided, False otherwise.
+        """
         player_bullets = []
         enemy_bullets = []
 
@@ -186,6 +222,7 @@ class InGameState (GameState):
 
     # TODO: change this to a random floats
     def __init_time_variables(self):
+        """ Initialize the time variables for the game. """
         self.last_enemy_time = time.time()
         self.new_enemy_time = random.randint(1, 3)
 
@@ -197,6 +234,12 @@ class InGameState (GameState):
 
 
     def __spawn_time_objects(self, current_time):
+        """ 
+        Spawn the time objects in the game.
+
+        Args:
+            current_time (float): The current time of the game.
+        """
         # check if it is time to spawn a new power up
         if current_time - self.last_power_up_time >= self.new_power_up_time:
             self.last_power_up_time = current_time

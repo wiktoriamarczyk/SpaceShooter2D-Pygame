@@ -3,6 +3,15 @@ from DynamicObject import DynamicObject
 
 class PowerUp (DynamicObject):
     def __init__(self, position, sprite, direction, type):
+        """
+        Initializes the power up object.
+
+        Args:
+            position (Vector2): The position of the object.
+            sprite (pg.Surface): The sprite of the object.
+            direction (ObjectDirection): The direction of the object.
+            type (PowerUpType): The type of the power up.
+        """
         super().__init__(position, sprite)
 
         self.direction = direction

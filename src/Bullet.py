@@ -3,6 +3,14 @@ from Weapon import Weapon
 
 class Bullet (Weapon):
     def __init__(self, position, sprite, direction=ObjectDirection.UP):
+        """
+        Initializes the bullet object.
+
+        Args:
+            position (Vector2): The position of the object.
+            sprite (pg.Surface): The sprite of the object.
+            direction (ObjectDirection): The direction of the object.
+        """
         super().__init__(position, sprite)
 
         self.direction = direction

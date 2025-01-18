@@ -39,7 +39,7 @@ class Boss (Enemy):
         from Ray import Ray
 
         offset = pg.Vector2(10, 20)
-        ray = Ray(pg.Vector2(self.position.x - offset.x, self.position.y + self.size.y / 2 - offset.y), None)
+        ray = Ray(pg.Vector2(self.position.x - offset.x, self.position.y + self.size.y / 2 - offset.y))
         Engine._instance.add_object(ray)
 
 

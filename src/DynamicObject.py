@@ -3,6 +3,13 @@ from GameObject import GameObject
 
 class DynamicObject (GameObject):
     def __init__(self, position, sprite):
+        """
+        Initializes the DynamicObject.
+
+        Args:
+            position (Vector2): The position of the object.
+            sprite (pg.Surface): The sprite of the object.
+        """
         super().__init__(sprite)
 
         self.position = position
@@ -28,6 +35,12 @@ class DynamicObject (GameObject):
     
 
     def update_explosion_logic(self, delta_time):
+        """
+        Updates the explosion logic. This function is called when the object is ready to explode.
+
+        Args:
+            delta_time (float): Time passed since the last frame in seconds.
+        """
         if self.is_exploding == True:
             self.image = self.explosion_frames[min(self.explosion_frame_index, len(self.explosion_frames) - 1)]
             self.image = pg.transform.scale(self.image, self.size)

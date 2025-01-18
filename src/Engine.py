@@ -14,11 +14,18 @@ class Engine:
     _instance = None
 
     def __new__(cls, *args, **kwargs):
+        """
+        Singleton pattern implementation.
+
+        Returns:
+            Engine: The instance of the Engine.
+        """
         if not cls._instance:
             cls._instance = super(Engine, cls).__new__(cls)
         return cls._instance
 
     def __init__(self):
+        """ Initializes the Engine. """
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pg.time.Clock()
         self.frame_per_sec = 60.0
@@ -53,6 +60,7 @@ class Engine:
 
 
     def run(self):
+        """ Main loop of the game."""
         while True:
             self.__handle_events()
             self.screen.fill(BACKGROUND_COLOR)
@@ -66,14 +74,32 @@ class Engine:
 
     
     def add_object(self, game_object):
+        """
+        Adds a game object to the current state. It is used when current state is GAME.
+
+        Args:
+            game_object (GameObject): The object to add.
+        """
         self.current_state.add_object(game_object)
 
         
     def get_ship_position(self):
+        """
+        Get the ship position. It is used when current state is GAME.
+
+        Returns:
+            pg.Vector2: The ship position.
+        """
         return self.current_state.get_ship_position()
 
     
     def change_game_state(self, state_id):
+        """
+        Changes the current game state.
+
+        Args:
+            state_id (GameStateID): The ID of the new state
+        """
         if state_id is not GameStateID.GAME_OVER:
             self.__restart_game()
         self.current_state = self.all_states[state_id]
@@ -81,29 +107,55 @@ class Engine:
 
 
     def set_game_over(self, game_over):
+        """
+        Sets the game over state.
+
+        Args:
+            game_over (bool): True if the game is over and player has won, False if the game is over and player has lost.
+        """
         self.game_over = game_over
         self.change_game_state(GameStateID.GAME_OVER)
 
 
     def get_end_state(self):
+        """
+        Get the end state.
+
+        Returns:
+            bool: True if the game is over and player has won, False if the game is over and player has lost.
+        """
         return self.game_over
     
 
     def add_points(self, points):
+        """
+        Adds points to the player.
+
+        Args:
+            points (int): The points to add.
+        """
         self.points += points
 
 
     def get_points(self):
+        """
+        Get the current points of the player.
+
+        Returns:
+            int: The current points of the player.
+        """
         return self.points
     
 
     def __restart_game(self):
+        """ Restarts the game variables. """
         self.pause = False
         self.points = 0
         self.game_over = None
 
 
     def __draw_pause(self):
+        """ Draws the pause screen. """
         rect_size = pg.Vector2(400, 200)
         bttn_size = pg.Vector2(100, 50)
         offset_x = 200
@@ -129,6 +181,7 @@ class Engine:
 
 
     def __handle_events(self):
+        """ Handles the events of the game. """
         events = pg.event.get()
         if self.pause == False:
             self.current_state.handle_events(events)
@@ -143,12 +196,20 @@ class Engine:
 
 
     def __render(self):
+        """ Renders the game. """
         self.current_state.render(self.screen)
         if self.pause:
             self.__draw_pause()
 
 
-    def __update(self, delta_time):          
+    def __update(self, delta_time):   
+        """ 
+        Updates the game. 
+
+        Args:
+            delta_time (float): The time passed since the last frame in seconds.
+        
+        """       
         if self.return_to_menu_bttn is not None and self.pause == True:
             self.return_to_menu_bttn.update()
 
@@ -164,6 +225,15 @@ class Engine:
 
 
     def get_sprite(self, sprite_name):
+        """
+        Get the sprite from the list of sprites. If the sprite is not found, it is loaded.
+
+        Args:
+            sprite_name (str): The name of the sprite.
+
+        Returns:
+            pg.Surface: The sprite. None if the sprite is not found.
+        """
         # find the sprite
         if self.sprites is not None and sprite_name in self.sprites:
             return self.sprites[self.sprites.index(sprite_name)]
@@ -176,6 +246,7 @@ class Engine:
 
 
     def __scroll_background(self):
+        """  Scrolls the background of the game to create effect of movement. """
         if self.pause == False and self.current_state.ID is not GameStateID.MAIN_MENU:
             # Scroll the background horizontally
             self.scroll_y += 1
@@ -190,6 +261,12 @@ class Engine:
 
 
     def __spawn_time_objects(self, current_time):
+        """
+        Spawns objects based on time.
+
+        Args:
+            current_time (float): The current time in seconds.
+        """
         # check if it is time to spawn a new background object
         if current_time - self.last_asteroid_spawn_time >= self.asteroid_spawn_time:
             self.__spawn_asteroids()
@@ -256,6 +333,7 @@ class Engine:
 
 
     def __init_time_variables(self):
+        """ Initializes the time variables. """
         self.last_asteroid_spawn_time = time.time()
         self.asteroid_spawn_time = 3
 
@@ -264,6 +342,13 @@ class Engine:
 
 
     def __load_images(self, array, dir_path):
+        """ 
+        Loads images from a directory and stores them in an array.
+
+        Args:
+            array (list): The array to store the images.
+            dir_path (str): The path to the directory.
+        """
         for root, dirs, files in os.walk(dir_path):
             for file in files:
                 if file.endswith((".png", ".jpg", ".jpeg")):

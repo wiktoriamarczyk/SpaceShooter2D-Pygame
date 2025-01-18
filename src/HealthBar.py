@@ -1,8 +1,15 @@
 from Common import *
 
 class HealthBar:
-
     def __init__(self, width, height, max_health):
+        """
+        Initializes the health bar object.
+
+        Args:
+            width (int): The width of the health bar.
+            height (int): The height of the health bar.
+            max_health (int): The maximum health of the entity.
+        """
         self.width = width
         self.height = height
         self.max_health = max_health
@@ -13,6 +20,14 @@ class HealthBar:
 
 
     def draw(self, screen, position, current_health):
+        """
+        Draws the health bar on the screen.
+
+        Args:
+            screen (pygame.Surface): The surface to draw the health bar on.
+            position (Vector2): The position to draw the health bar at.
+            current_health (int): The current health of the entity.
+        """
         health_percentage = max(0, current_health / self.max_health)
         current_bar_width = int(self.width * health_percentage)
 

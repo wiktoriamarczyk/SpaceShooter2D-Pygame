@@ -2,7 +2,7 @@ from Common import *
 from Weapon import Weapon
 
 class Ray (Weapon):
-    def __init__(self, position, sprite):
+    def __init__(self, position):
 
         self.sprite_index = 0
         self.sprite_timer = 0
