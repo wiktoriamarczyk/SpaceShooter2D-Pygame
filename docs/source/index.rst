@@ -6,10 +6,16 @@
 SpaceShooter2D-Pygame documentation
 ===================================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+Welcome to SpaceShooter2D-Pygame's documentation.
+Click this
+`link <modules.html>`_
+to check the list of all classes.
 
+.. image:: _static/boss.png
+   :alt: Boss character
+   :height: 90px
+   :width: 90px
+   :align: center
 
 .. toctree::
    :maxdepth: 2
