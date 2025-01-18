@@ -7,7 +7,8 @@ class BombEnemy (Enemy):
     def __init__(self, position, sprite):
         
         from Engine import Engine
-        bullet_sprite = Engine._instance.get_sprite(WEAPONS_PATH + "/bomb-ship-weapon.png")
+        path = os.path.join(WEAPONS_PATH, 'bomb-ship-weapon.png')
+        bullet_sprite = Engine._instance.get_sprite(path)
         
         super().__init__(position, sprite, bullet_sprite)
 

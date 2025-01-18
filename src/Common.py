@@ -1,14 +1,16 @@
 import pygame as pg
 from enum import Enum
+import os
 
-DATA_PATH = 'data'
-SPRITES_PATH = DATA_PATH + '/sprites'
-BACKGROUND_PATH = SPRITES_PATH + '/background/background.png'
-ASTEROIDS_PATH = SPRITES_PATH + '/background/asteroids'
-STARS_PATH = SPRITES_PATH + '/background/stars'
-UNITS_PATH = SPRITES_PATH + '/units'
-WEAPONS_PATH = SPRITES_PATH + '/weapons'
-POWER_UPS_PATH = SPRITES_PATH + '/power-ups'
+base_path = os.path.dirname(os.path.abspath(__file__))
+DATA_PATH = os.path.join(base_path, '../data')
+SPRITES_PATH = os.path.join(DATA_PATH, 'sprites')
+BACKGROUND_PATH = os.path.join(SPRITES_PATH, 'background', 'background.png')
+ASTEROIDS_PATH = os.path.join(SPRITES_PATH, 'background', 'asteroids')
+STARS_PATH = os.path.join(SPRITES_PATH, 'background', 'stars')
+UNITS_PATH = os.path.join(SPRITES_PATH, 'units')
+WEAPONS_PATH = os.path.join(SPRITES_PATH, 'weapons')
+POWER_UPS_PATH = os.path.join(SPRITES_PATH, 'power-ups')
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600

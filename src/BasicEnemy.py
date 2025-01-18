@@ -5,7 +5,8 @@ class BasicEnemy (Enemy):
     def __init__(self, position, sprite):
 
         from Engine import Engine
-        bullet_sprite = Engine._instance.get_sprite(WEAPONS_PATH + "/bullet-ship-weapon.png")
+        path = os.path.join(WEAPONS_PATH, 'bullet-ship-weapon.png')
+        bullet_sprite = Engine._instance.get_sprite(path)
         super().__init__(position, sprite, bullet_sprite)
 
         self.init_health_bar()

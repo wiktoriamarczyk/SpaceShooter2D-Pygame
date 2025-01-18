@@ -13,7 +13,8 @@ class Ray (Weapon):
         self.sprites_to_render = SCREEN_HEIGHT // self.size.y + 1
 
         from Engine import Engine
-        sprite = Engine._instance.get_sprite(WEAPONS_PATH + "/ray.png")
+        path = os.path.join(WEAPONS_PATH, 'ray.png')
+        sprite = Engine._instance.get_sprite(path)
         
         for i in range(4):
             self.sprites.append(sprite.subsurface(pg.Rect(i * self.size.x, 0, self.size.x, self.size.y)))

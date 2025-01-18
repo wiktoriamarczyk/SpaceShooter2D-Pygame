@@ -14,11 +14,11 @@ class DynamicObject (GameObject):
         # Explosion animation parameters
         from Engine import Engine
         self.explosion_frames = [
-            Engine._instance.get_sprite(WEAPONS_PATH + "/explosion1.png"),
-            Engine._instance.get_sprite(WEAPONS_PATH + "/explosion2.png"),
-            Engine._instance.get_sprite(WEAPONS_PATH + "/explosion3.png"),
-            Engine._instance.get_sprite(WEAPONS_PATH + "/explosion4.png"),
-            Engine._instance.get_sprite(WEAPONS_PATH + "/explosion5.png"),
+            Engine._instance.get_sprite(os.path.join(WEAPONS_PATH, "explosion1.png")),
+            Engine._instance.get_sprite(os.path.join(WEAPONS_PATH, "explosion2.png")),
+            Engine._instance.get_sprite(os.path.join(WEAPONS_PATH, "explosion3.png")),
+            Engine._instance.get_sprite(os.path.join(WEAPONS_PATH, "explosion4.png")),
+            Engine._instance.get_sprite(os.path.join(WEAPONS_PATH, "explosion5.png")),
         ]
         self.is_explosive = False
         self.is_exploding = False
